@@ -12,7 +12,7 @@ Follow these steps to set up and run the project:
    ```
 
 2. **Clean Previous Build Files**
-   ```bash
+   ```bash 
    make clean
    ```
 
