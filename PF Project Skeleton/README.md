@@ -8,7 +8,7 @@ Follow these steps to set up and run the project:
 
 1. **Install Required Libraries**
    ```bash
-   bash libraries.sh
+   bash libraries.sh 
    ```
 
 2. **Clean Previous Build Files**
