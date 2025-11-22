@@ -20,4 +20,8 @@
 // file or initialize application).
 // ----------------------------------------------------------------------------
 int main() {
+    initializeApp();
+
+    runApp();
+    cleanupApp();
 }

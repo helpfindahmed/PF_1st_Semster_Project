@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdio>
 
+using namespace sf;
 // ============================================================================
 // APP.CPP - Implementation of SFML application (NO CLASSES)
 // ============================================================================
@@ -15,11 +16,11 @@
 // ----------------------------------------------------------------------------
 // GLOBAL VARIABLES FOR APP STATE
 // ----------------------------------------------------------------------------
-static sf::RenderWindow* g_window = nullptr;
-static sf::Font g_font;
+static RenderWindow* g_window = nullptr;
+static Font g_font;
 
 // View for camera (panning/zoom)
-static sf::View g_camera;
+static View g_camera;
 
 // Simulation state
 static bool g_isPaused = false;
@@ -46,6 +47,12 @@ static float g_gridOffsetY = 50.0f;
 // the main loop.
 // ----------------------------------------------------------------------------
 bool initializeApp() {
+    g_window = new RenderWindow(VideoMode(480,580), "SFML Sprite Transformations");
+    if (!g_window) {
+        return false;
+    }
+    g_window->setFramerateLimit(60);
+    return true;
 }
 
 // ----------------------------------------------------------------------------
@@ -60,6 +67,22 @@ bool initializeApp() {
 // loop exits when the window is closed or ESC is pressed.
 // ----------------------------------------------------------------------------
 void runApp() {
+    while (g_window->isOpen()) {
+        Event event;
+        while (g_window->pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                g_window->close();
+            }
+            if (event.type == Event::KeyPressed) {
+                if (event.key.code == Keyboard::Escape) {
+                    g_window->close();
+                }
+            }
+        }
+    
+        g_window->clear(Color(255,255,255));
+        g_window->display();
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -71,4 +94,8 @@ void runApp() {
 // proper resource cleanup.
 // ----------------------------------------------------------------------------
 void cleanupApp() {
+     if (g_window) {
+        delete g_window;
+        g_window = nullptr;
+    }
 }
