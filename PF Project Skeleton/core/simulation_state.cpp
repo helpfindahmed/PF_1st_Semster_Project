@@ -9,21 +9,21 @@ using namespace std;
 // ----------------------------------------------------------------------------
 // GRID
 // ----------------------------------------------------------------------------
-int rows = 0;
-int cols = 0;
-char* grid = nullptr;
+int rows = 0; //will also be later defined in some other file
+int cols = 0; //will also be later defined in some other file
+char* grid = nullptr; //will be later defined in some other file and will become 2d array since char* grid = char[rows*cols]
 // ----------------------------------------------------------------------------
 // TRAINS
 // ----------------------------------------------------------------------------
-int maxTrains = 10;
+int maxTrains = 10; //hard-coded since max is 10 in complex_network
 int trainX[10] = {0};
 int trainY[10] = {0};
-int trainDirection[10] = {0};
-int trainActive[10] = {0};
+int trainDirection[10] = {0}; 
+int trainActive[10] = {0}; //can only be 0 or 1
 // ----------------------------------------------------------------------------
 // SWITCHES
 // ----------------------------------------------------------------------------
-int maxSwitches = 20;
+int maxSwitches = 20; //also hard-coded since max is 20 in complex_network
 int switchX[20] = {0};
 int switchY[20] = {0};
 int switchState[20] = {0};
