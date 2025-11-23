@@ -1,6 +1,7 @@
 #ifndef SIMULATION_STATE_H
 #define SIMULATION_STATE_H
 
+
 // ============================================================================
 // SIMULATION_STATE.H - Global constants and state
 // ============================================================================
