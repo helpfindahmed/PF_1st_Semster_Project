@@ -3,6 +3,8 @@
 #include "../core/simulation.h"
 #include "../core/io.h"
 #include <iostream>
+#include <string>
+using namespace std;
 
 // ============================================================================
 // MAIN.CPP - Entry point of the application (NO CLASSES)
@@ -19,9 +21,19 @@
 // statistics. Returns 0 on success, 1 on error (e.g., failed to load level
 // file or initialize application).
 // ----------------------------------------------------------------------------
-int main() {
+int main(int argc, char* argv[]) {
+    if (argc < 2){ //making sure user typed in at least 1 argument (excluding the program name)
+        cout << "Error: missing filename \n";
+        cout << "Usage: " << argv[0] << " <filename.lvl> \n";
+        return 1;
+    }
+    initializeSimulation(argv[1]);
     initializeApp();
-
+    
     runApp();
+    
     cleanupApp();
+    cout << "Application closed" << endl;
+
+    return 0;
 }

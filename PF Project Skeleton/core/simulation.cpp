@@ -14,7 +14,9 @@
 // INITIALIZE SIMULATION
 // ----------------------------------------------------------------------------
 
-void initializeSimulation() {
+void initializeSimulation(char* filename) {
+    initializeSimulationState(); //changes
+    loadLevelFile(filename); //a pointer pointing to the first element's first character of C-string from command line
 }
 
 // ----------------------------------------------------------------------------
@@ -28,5 +30,6 @@ void simulateOneTick() {
 // CHECK IF SIMULATION IS COMPLETE
 // ----------------------------------------------------------------------------
 
-bool isSimulationComplete() {
+bool isSimulationComplete() { //defined when all trains reach destination or collide
+
 }

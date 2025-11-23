@@ -5,6 +5,9 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <string>
+#include <iostream>
+using namespace std;
 
 // ============================================================================
 // IO.CPP - Level I/O and logging
@@ -15,7 +18,14 @@
 // ----------------------------------------------------------------------------
 // Load a .lvl file into global state.
 // ----------------------------------------------------------------------------
-bool loadLevelFile() {
+bool loadLevelFile(const char* filename) {
+    ifstream file (filename);
+    if (!file.is_open()){
+        cout << "Error: could not load the file " << filename << endl; 
+        return false;
+    }
+    
+    return true;
 }
 
 // ----------------------------------------------------------------------------

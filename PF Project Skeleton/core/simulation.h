@@ -15,7 +15,7 @@ void simulateOneTick();
 // INITIALIZATION
 // ----------------------------------------------------------------------------
 // Initialize the simulation after loading a level.
-void initializeSimulation();
+void initializeSimulation(char* filename);
 
 // ----------------------------------------------------------------------------
 // UTILITY
