@@ -47,7 +47,7 @@ static float g_gridOffsetY = 50.0f;
 // the main loop.
 // ----------------------------------------------------------------------------
 bool initializeApp() {
-    g_window = new RenderWindow(VideoMode(480,580), "SFML Sprite Transformations");
+    g_window = new RenderWindow(VideoMode(480,580), "Switchback Rails");
     if (!g_window) {
         return false;
     }
@@ -78,8 +78,11 @@ void runApp() {
                     g_window->close();
                 }
             }
+            if (!isSimulationComplete()){ //simulate a tick until all trains reach their destination or collide
+                simulateOneTick();       //and simulate it as long as the window is open the moment it closes this also stops 
+            }
         }
-    
+        
         g_window->clear(Color(255,255,255));
         g_window->display();
     }
@@ -94,8 +97,8 @@ void runApp() {
 // proper resource cleanup.
 // ----------------------------------------------------------------------------
 void cleanupApp() {
-     if (g_window) {
-        delete g_window;
-        g_window = nullptr;
+     if (g_window) { //if g_window pointer has a value meaning it isnt 0 or NULLPTR
+        delete g_window; //delete the heap in DMA
+        g_window = nullptr; //make sure it isn't a dangling pointer now
     }
 }
