@@ -43,8 +43,9 @@ bool initializeApp() {
     
     // Load sprites and scale to 40x40px
     for (int i = 0; i < NUM_SPRITES; i++) {
-        char path[50];
-        sprintf(path, "Sprites/%d.png", i + 1);
+        char path[256];
+        sprintf(path, "/home/ahmed-habib/Ahmed/Projects/Switchback_Rails-main/Sample Board and Sprites run/Sprites/%d.png", i+1);
+
         
         if (g_textures[i].loadFromFile(path)) {
             g_sprites[i].setTexture(g_textures[i]);
