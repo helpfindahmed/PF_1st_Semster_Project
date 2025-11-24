@@ -56,7 +56,7 @@ bool isEmergencyHalt = false;
 // ----------------------------------------------------------------------------
 // Called before loading a new level.
 // ----------------------------------------------------------------------------
-
+// blubala
 void initializeSimulationState() {
     rows = 0;
     cols = 0;
@@ -65,7 +65,7 @@ void initializeSimulationState() {
     numCrashed = 0;
     isEmergencyHalt = false;
 
-    for (int i = 0; i < maxTrains; ++i) {
+     for (int i = 0; i < maxTrains; ++i) {
         trainX[i] = 0;
         trainY[i] = 0;
         trainDirection[i] = 0;
