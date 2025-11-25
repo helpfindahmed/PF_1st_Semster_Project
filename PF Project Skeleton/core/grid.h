@@ -17,7 +17,7 @@ bool isTrackTile(int x, int y);
 bool isSwitchTile(int x , int y);
 
 // Get the switch index (0-25) from a switch character (A-Z)
-int getSwitchIndex();
+int getSwitchIndex( char swithChar);
 
 // Check if a position is a spawn point
 bool isSpawnPoint(int x, int y);
