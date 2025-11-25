@@ -10,15 +10,24 @@
 // ----------------------------------------------------------------------------
 // Returns true if x,y are within bounds.
 // ----------------------------------------------------------------------------
-bool isInBounds() {
+bool isInBounds(int x , int y) {
+    return x >= 0 && x < cols && y >= 0 && y < rows;
 }
-
 // ----------------------------------------------------------------------------
 // Check if a tile is a track tile.
 // ----------------------------------------------------------------------------
 // Returns true if the tile can be traversed by trains.
 // ----------------------------------------------------------------------------
-bool isTrackTile() {
+bool isTrackTile(int x, int y ) {
+    if (!isInBounds(x, y)) {
+        return false;
+    }
+
+    
+    char tile = grid[(y * cols) + x];
+
+    return tile == '-' || tile == '|' || tile == '+';
+    
 }
 
 // ----------------------------------------------------------------------------
@@ -26,7 +35,17 @@ bool isTrackTile() {
 // ----------------------------------------------------------------------------
 // Returns true if the tile is 'A'..'Z'.
 // ----------------------------------------------------------------------------
-bool isSwitchTile() {
+bool isSwitchTile(int x , int y) {
+
+     if (!isInBounds(x, y)) {
+        return false;
+    }
+
+    
+    char tile = grid[(y * cols) + x];
+
+   
+    return tile >= 'A' && tile <= 'Z';
 }
 
 // ----------------------------------------------------------------------------
@@ -34,7 +53,13 @@ bool isSwitchTile() {
 // ----------------------------------------------------------------------------
 // Maps 'A'..'Z' to 0..25, else -1.
 // ----------------------------------------------------------------------------
-int getSwitchIndex() {
+int getSwitchIndex(char switchChar) {
+
+    if (switchChar >= 'A' && switchChar <= 'Z') {
+       
+        return switchChar - 'A'; 
+    }
+    return -1;
 }
 
 // ----------------------------------------------------------------------------
@@ -42,7 +67,14 @@ int getSwitchIndex() {
 // ----------------------------------------------------------------------------
 // Returns true if x,y is a spawn.
 // ----------------------------------------------------------------------------
-bool isSpawnPoint() {
+bool isSpawnPoint(int x , int y) {
+
+        for (int i = 0; i < MAX_TRAINS; ++i) {
+        if (spawnX[i] == x && spawnY[i] == y) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // ----------------------------------------------------------------------------
@@ -50,7 +82,13 @@ bool isSpawnPoint() {
 // ----------------------------------------------------------------------------
 // Returns true if x,y is a destination.
 // ----------------------------------------------------------------------------
-bool isDestinationPoint() {
+bool isDestinationPoint(int x , int y) {
+        for (int i = 0; i < MAX_TRAINS; ++i) {
+        if (destX[i] == x && destY[i] == y) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // ----------------------------------------------------------------------------
@@ -58,5 +96,24 @@ bool isDestinationPoint() {
 // ----------------------------------------------------------------------------
 // Returns true if toggled successfully.
 // ----------------------------------------------------------------------------
-bool toggleSafetyTile() {
+bool toggleSafetyTile(int x , int y) {
+
+        if (!isInBounds(x, y)) {
+        return false;
+    }
+
+    
+    char& tile = grid[(y * cols) + x]; 
+
+    if (tile == ' ') {
+        
+        tile = 'S'; 
+        return true;
+    } else if (tile == 'S') {
+        
+        tile = ' ';
+        return true;
+    }
+    
+    return false;
 }
