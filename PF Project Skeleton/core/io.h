@@ -18,13 +18,13 @@ bool loadLevelFile(const char* filename);
 void initializeLogFiles();
 
 // Append train movement to trace.csv.
-void logTrainTrace();
+void logTrainTrace(int trainId);
 
 // Append switch state to switches.csv.
-void logSwitchState();
+void logSwitchState(int switchIndex);
 
 // Append signal state to signals.csv.
-void logSignalState();
+void logSignalState(int switchIndex, char signalColor);
 
 // Write final metrics to metrics.txt.
 void writeMetrics();
