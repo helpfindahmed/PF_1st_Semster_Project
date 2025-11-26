@@ -23,7 +23,7 @@ bool isTrackTile(int x, int y) {
         return false;
     }
     char tile = grid[(x * cols) + y];
-    return tile == '-' || tile == '|' || tile == '+';
+    return (tile == '-' || tile == '|' || tile == '+' || tile == '/' || tile == '\\');
 }
 
 // ----------------------------------------------------------------------------
