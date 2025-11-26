@@ -16,8 +16,8 @@
 // ----------------------------------------------------------------------------
 // TRAIN CONSTANTS
 // ----------------------------------------------------------------------------
-extern const int MAX_TRAINS; 
-extern const int MAX_SWITCHES;
+extern const int maxTrains; 
+extern const int maxSwitches;
 
 // ----------------------------------------------------------------------------
 // SWITCH CONSTANTS

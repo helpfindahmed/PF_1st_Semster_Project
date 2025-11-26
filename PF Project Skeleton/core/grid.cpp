@@ -11,23 +11,19 @@
 // Returns true if x,y are within bounds.
 // ----------------------------------------------------------------------------
 bool isInBounds(int x , int y) {
-    return x >= 0 && x < cols && y >= 0 && y < rows;
+    return (x >= 0 && x < rows && y >= 0 && y < cols);
 }
 // ----------------------------------------------------------------------------
 // Check if a tile is a track tile.
 // ----------------------------------------------------------------------------
 // Returns true if the tile can be traversed by trains.
 // ----------------------------------------------------------------------------
-bool isTrackTile(int x, int y ) {
+bool isTrackTile(int x, int y) {
     if (!isInBounds(x, y)) {
         return false;
     }
-
-    
-    char tile = grid[(y * cols) + x];
-
+    char tile = grid[(x * cols) + y];
     return tile == '-' || tile == '|' || tile == '+';
-    
 }
 
 // ----------------------------------------------------------------------------
@@ -40,11 +36,7 @@ bool isSwitchTile(int x , int y) {
      if (!isInBounds(x, y)) {
         return false;
     }
-
-    
-    char tile = grid[(y * cols) + x];
-
-   
+    char tile = grid[(x * cols) + y];
     return tile >= 'A' && tile <= 'Z';
 }
 
@@ -61,59 +53,49 @@ int getSwitchIndex(char switchChar) {
     }
     return -1;
 }
-
 // ----------------------------------------------------------------------------
 // Check if a position is a spawn point.
 // ----------------------------------------------------------------------------
 // Returns true if x,y is a spawn.
 // ----------------------------------------------------------------------------
 bool isSpawnPoint(int x , int y) {
-
-        for (int i = 0; i < MAX_TRAINS; ++i) {
+    for (int i = 0; i < maxTrains; i++) {
         if (spawnX[i] == x && spawnY[i] == y) {
             return true;
         }
     }
     return false;
 }
-
 // ----------------------------------------------------------------------------
 // Check if a position is a destination.
 // ----------------------------------------------------------------------------
 // Returns true if x,y is a destination.
 // ----------------------------------------------------------------------------
 bool isDestinationPoint(int x , int y) {
-        for (int i = 0; i < MAX_TRAINS; ++i) {
+    for (int i = 0; i < maxTrains; i++) {
         if (destX[i] == x && destY[i] == y) {
             return true;
         }
     }
     return false;
 }
-
 // ----------------------------------------------------------------------------
 // Toggle a safety tile.
 // ----------------------------------------------------------------------------
 // Returns true if toggled successfully.
 // ----------------------------------------------------------------------------
 bool toggleSafetyTile(int x , int y) {
-
-        if (!isInBounds(x, y)) {
+    if (!isInBounds(x, y)) {
         return false;
     }
-
-    
-    char& tile = grid[(y * cols) + x]; 
-
-    if (tile == ' ') {
-        
-        tile = 'S'; 
+    char tile = grid[(x * cols) + y]; 
+    if (tile == '-') {
+        tile = '='; 
         return true;
-    } else if (tile == 'S') {
-        
-        tile = ' ';
+
+    } else if (tile == '=') {
+        tile = '-';
         return true;
     }
-    
     return false;
-}
+}   
