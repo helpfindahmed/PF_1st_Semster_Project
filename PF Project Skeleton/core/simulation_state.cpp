@@ -15,25 +15,20 @@ char* grid = nullptr; //will be later defined in some other file and will become
 // ----------------------------------------------------------------------------
 // TRAINS
 // ----------------------------------------------------------------------------
-const int maxTrains = 10; //hard-coded since max is 10 in complex_network
-int trainX[10] = {0};
-int trainY[10] = {0};
-int trainDirection[10] = {0}; 
-int trainActive[10] = {0}; //can only be 0 or 1
+int maxTrains = 0; 
+int trains[10][6] = {}; //spawn tick, trainX, trainY, trainDirection, trainActive, color/trainId 
 // ----------------------------------------------------------------------------
 // SWITCHES
 // ----------------------------------------------------------------------------
-const int maxSwitches = 20; //also hard-coded since max is 20 in complex_network
-int switchX[20] = {0};
-int switchY[20] = {0};
-int switchState[20] = {0};
+int maxSwitches = 0; 
+int switches[20][11] = {}; //getSwitchIndex(), mode if 1 = PER_DIR 2 = GLOBAL, init, k_up, right, down, left, state0, state1
 // ----------------------------------------------------------------------------
 // SPAWN AND DESTINATION POINTS
 // ----------------------------------------------------------------------------
-int spawnX[10] = {0};
-int spawnY[10] = {0};
-int destX[10] = {0};
-int destY[10] = {0};
+int spawnX[10] = {};
+int spawnY[10] = {};
+int destX[10] = {};
+int destY[10] = {};
 // ----------------------------------------------------------------------------
 // SIMULATION PARAMETERS
 // ----------------------------------------------------------------------------
@@ -56,30 +51,29 @@ bool isEmergencyHalt = false;
 // ----------------------------------------------------------------------------
 // Called before loading a new level.
 // ----------------------------------------------------------------------------
-// blubala
 void initializeSimulationState() {
-    rows = 0;
-    cols = 0;
+    rows = -1;
+    cols = -1;
     tick = 0;
     numArrived = 0;
     numCrashed = 0;
     isEmergencyHalt = false;
 
-     for (int i = 0; i < maxTrains; ++i) {
-        trainX[i] = 0;
-        trainY[i] = 0;
-        trainDirection[i] = 0;
-        trainActive[i] = 0;
-        spawnX[i] = 0;
-        spawnY[i] = 0;
-        destX[i] = 0;
-        destY[i] = 0;
+    //initialize everything to -1
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 6; j++){
+        trains[i][j] = -1;
+        }
+        spawnX[i] = -1;
+        spawnY[i] = -1;
+        destX[i] = -1;
+        destY[i] = -1;
     }
 
-    for (int i = 0; i < maxSwitches; ++i) {
-        switchX[i] = 0;
-        switchY[i] = 0;
-        switchState[i] = 0;
+    for (int i = 0; i < 20; i++) {
+        for (int j = 0; j < 11; j++){
+            switches[i][j] = -1; 
+        }
     }
 
     if (grid) { //since grid was DMA we need to delete to ensure no memory leakage so deleting process here

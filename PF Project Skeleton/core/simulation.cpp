@@ -15,7 +15,6 @@
 // ----------------------------------------------------------------------------
 
 void initializeSimulation(char* filename) {
-    initializeSimulationState(); //changes
     loadLevelFile(filename); //a pointer pointing to the first element's first character of C-string from command line
 }
 
@@ -24,7 +23,8 @@ void initializeSimulation(char* filename) {
 // ----------------------------------------------------------------------------
 
 void simulateOneTick() {
-    
+    tick++;
+    //update all the logs too here
 }
 
 // ----------------------------------------------------------------------------
@@ -32,5 +32,8 @@ void simulateOneTick() {
 // ----------------------------------------------------------------------------
 
 bool isSimulationComplete() { //defined when all trains reach destination or collide
-
+    if (numArrived + numCrashed == maxTrains)
+        return true;
+    else
+        return false;
 }

@@ -23,7 +23,7 @@ bool isTrackTile(int x, int y) {
         return false;
     }
     char tile = grid[(x * cols) + y];
-    return (tile == '-' || tile == '|' || tile == '+' || tile == '/' || tile == '\\');
+    return (tile == '-' || tile == '|' || tile == '+' || tile == '/' || tile == '\\' || tile == '+');
 }
 
 // ----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ bool isSwitchTile(int x , int y) {
 // ----------------------------------------------------------------------------
 // Maps 'A'..'Z' to 0..25, else -1.
 // ----------------------------------------------------------------------------
-int getSwitchIndex(char switchChar) {
+int getSwitchIndex(char switchChar) { //we get switchChar when we read from the file and load the variables with actual data
 
     if (switchChar >= 'A' && switchChar <= 'Z') {
        

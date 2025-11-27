@@ -28,7 +28,7 @@ bool loadLevelFile(const char* filename) {
         //read all data from file and put into variables.
     }
     
-    cout << "Level '" << filename << "' loaded successfully. Grid size: " << cols << "x" << rows << endl;
+    cout << "Level '" << filename << "' loaded successfully. Grid size: " << rows << "x" << cols << endl;
     return true;
 }
 
