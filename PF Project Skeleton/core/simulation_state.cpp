@@ -26,7 +26,7 @@ char trainColor[10] = {};
 // SWITCHES
 // ----------------------------------------------------------------------------
 int maxSwitches = 0; 
-int switchLetter[20] = {}; //get from the getSwitchIndex()
+int switchIndex[26] = {}; //get from the getSwitchIndex()
 int switchMode[20] = {}; // 1 = PER_DIR, 2 = GLOBAL
 int switchState[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
 
@@ -66,7 +66,6 @@ int numCrashed = 0;
 // ----------------------------------------------------------------------------
 bool isEmergencyHalt = false;
 
-
 // ============================================================================
 // INITIALIZE SIMULATION STATE
 // ============================================================================
@@ -97,7 +96,7 @@ void initializeSimulationState() {
     }
 
     for (int i = 0; i < maxSwitches; ++i) {
-        switchLetter[i] = -1;
+        switchIndex[i] = -1;
         switchMode[i] = -1;
         switchState[i] = -1;
         switchUp[i] = -1;
