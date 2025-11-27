@@ -16,12 +16,35 @@ char* grid = nullptr; //will be later defined in some other file and will become
 // TRAINS
 // ----------------------------------------------------------------------------
 int maxTrains = 0; 
-int trains[10][6] = {}; //spawn tick, trainX, trainY, trainDirection, trainActive, color/trainId 
+int trainSpawnTick[10] = {};
+int trainX[10] = {};
+int trainY[10] = {};
+int trainDirection[10] = {}; 
+int trainActive[10] = {}; //can only be 0 or 1
+char trainColor[10] = {};
 // ----------------------------------------------------------------------------
 // SWITCHES
 // ----------------------------------------------------------------------------
 int maxSwitches = 0; 
-int switches[20][11] = {}; //getSwitchIndex(), mode if 1 = PER_DIR 2 = GLOBAL, init, k_up, right, down, left, state0, state1
+int switchLetter[20] = {}; //get from the getSwitchIndex()
+int switchMode[20] = {}; // 1 = PER_DIR, 2 = GLOBAL
+int switchState[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
+
+
+int switchUp[20] = {};
+int switchRight[20] = {};
+int switchDown[20] = {};
+int switchLeft[20] = {};
+
+
+int switchX[20] = {};
+int switchY[20] = {};
+
+
+int switchState0[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
+int switchState1[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
+
+
 // ----------------------------------------------------------------------------
 // SPAWN AND DESTINATION POINTS
 // ----------------------------------------------------------------------------
@@ -43,6 +66,7 @@ int numCrashed = 0;
 // ----------------------------------------------------------------------------
 bool isEmergencyHalt = false;
 
+
 // ============================================================================
 // INITIALIZE SIMULATION STATE
 // ============================================================================
@@ -51,6 +75,7 @@ bool isEmergencyHalt = false;
 // ----------------------------------------------------------------------------
 // Called before loading a new level.
 // ----------------------------------------------------------------------------
+
 void initializeSimulationState() {
     rows = -1;
     cols = -1;
@@ -59,21 +84,30 @@ void initializeSimulationState() {
     numCrashed = 0;
     isEmergencyHalt = false;
 
-    //initialize everything to -1
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 6; j++){
-        trains[i][j] = -1;
-        }
+    for (int i = 0; i < maxTrains; ++i) {
+        trainSpawnTick[i] = -1;
+        trainX[i] = -1;
+        trainY[i] = -1;
+        trainDirection[i] = -1;
+        trainActive[i] = -1;
         spawnX[i] = -1;
         spawnY[i] = -1;
         destX[i] = -1;
         destY[i] = -1;
     }
 
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 11; j++){
-            switches[i][j] = -1; 
-        }
+    for (int i = 0; i < maxSwitches; ++i) {
+        switchLetter[i] = -1;
+        switchMode[i] = -1;
+        switchState[i] = -1;
+        switchUp[i] = -1;
+        switchRight[i] = -1;
+        switchDown[i] = -1;
+        switchLeft[i] = -1;
+        switchX[i] = -1;
+        switchY[i] = -1;
+        switchState0[i] = -1;
+        switchState1[i] = -1;
     }
 
     if (grid) { //since grid was DMA we need to delete to ensure no memory leakage so deleting process here
