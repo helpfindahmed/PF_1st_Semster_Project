@@ -45,17 +45,32 @@ extern char* grid;
 // ----------------------------------------------------------------------------
 // GLOBAL STATE: TRAINS
 // ----------------------------------------------------------------------------
+extern int trainSpawn[10];
 extern int trainX[10];
 extern int trainY[10];
 extern int trainDirection[10]; 
 extern int trainActive[10];
+extern char trainColor[10];
+extern int trainprevX[10];
+extern int trainprevY[10];
 
 // ----------------------------------------------------------------------------
 // GLOBAL STATE: SWITCHES (A-Z mapped to 0-25)
 // ----------------------------------------------------------------------------
+extern int switchLetter[20];
+extern int switchMode[20];
+extern int switchState[20];
+
+extern int switchUp[20];
+extern int switchRight[20];
+extern int switchDown[20];
+extern int switchLeft[20];
+
 extern int switchX[20];
 extern int switchY[20];
-extern int switchState[20];
+
+extern int switchState0[20];
+extern int switchState1[20];
 
 // ----------------------------------------------------------------------------
 // GLOBAL STATE: SPAWN POINTS

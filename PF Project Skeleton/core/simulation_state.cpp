@@ -22,6 +22,8 @@ int trainY[10] = {};
 int trainDirection[10] = {}; 
 int trainActive[10] = {}; //can only be 0 or 1
 char trainColor[10] = {};
+int trainprevX[10] = {};
+int trainprevY[10] = {};
 // ----------------------------------------------------------------------------
 // SWITCHES
 // ----------------------------------------------------------------------------
@@ -87,6 +89,8 @@ void initializeSimulationState() {
         trainSpawnTick[i] = -1;
         trainX[i] = -1;
         trainY[i] = -1;
+        trainprevX[i] = -1;
+        trainprevY[i] = -1;
         trainDirection[i] = -1;
         trainActive[i] = -1;
         spawnX[i] = -1;
