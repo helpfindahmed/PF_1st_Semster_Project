@@ -30,8 +30,8 @@ int trainprevY[10] = {};
 int maxSwitches = 0; 
 int switchIndex[26] = {}; //get from the getSwitchIndex()
 int switchMode[20] = {}; // 1 = PER_DIR, 2 = GLOBAL
-int switchState[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
-
+int switchState[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT . should not that be only 1 and 0?
+int switchEntryCount [20][4];
 
 int switchUp[20] = {};
 int switchRight[20] = {};
