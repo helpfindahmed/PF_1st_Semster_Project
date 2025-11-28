@@ -21,7 +21,7 @@ int trainX[10] = {};
 int trainY[10] = {};
 int trainDirection[10] = {}; 
 int trainActive[10] = {}; //can only be 0 or 1
-char trainColor[10] = {};
+int trainColor[10] = {};
 int trainprevX[10] = {};
 int trainprevY[10] = {};
 // ----------------------------------------------------------------------------

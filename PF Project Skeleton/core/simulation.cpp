@@ -41,8 +41,14 @@ void simulateOneTick() {
     // Phase 7:        
   
     // Update logs
-    logTrainTrace();   
-    logSwitchState();  
+    for(int i = 0; i < 10; i++){
+        if (trainActive[i])
+            logTrainTrace(trainColor[i]);   
+    }
+    for (int i = 0; i < 26; i++){
+        logSwitchState(i);  
+    }
+   
     
 }
 

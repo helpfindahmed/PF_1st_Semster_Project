@@ -2,11 +2,12 @@
 #include "simulation_state.h"
 #include "grid.h"
 #include <fstream>
-#include <cstring>
+#include <string>
 #include <cstdio>
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <cmath>
 using namespace std;
 int seed;
 string weather;
@@ -27,7 +28,6 @@ bool loadLevelFile(const char* filename) {
         return false;
     }else{
         string line;
-        char ch;
             
         while (getline(file, line)) {
             if (line == "ROWS:")
@@ -63,7 +63,7 @@ bool loadLevelFile(const char* filename) {
                 break;
         }
      
-        int current_row = 0;
+        int current_row = 2;
         int current_index = 2 * cols; 
         
         while (current_row < rows && getline(file, line)) {
@@ -76,20 +76,92 @@ bool loadLevelFile(const char* filename) {
                 continue; 
             }
             for (int k = 0; k < cols; k++) {
-                if (k < 40) {
+                    if (line[k]>='A' && line[k]<='Z'){
+                        int idx = getSwitchIndex(line[k]);
+                        switchY[idx] = current_row;
+                        switchX[idx] = k;
+                    }
                     grid[current_index++] = line[k];
                 }
-            }
-            
             current_row++;
         }
+        
+        while (getline(file,line)){ //A PER_DIR 0 2 2 2 2 STRAIGHT TURN
+            if (line == "TRAINS:") break;
+            if (!line.empty()){
+                int index = getSwitchIndex(line[0]);
+                switchIndex[index] = index;
+                if (line[2] == 'P')
+                    {switchMode[index] = 2;
+                    switchState[index] = (int)line[10]-48;
+                    switchK[index][0] = (int)line[12]-48;
+                    switchK[index][1] = (int)line[14]-48;
+                    switchK[index][2] = (int)line[16]-48;
+                    switchK[index][3] = (int)line[18]-48;
+                    switchState0[index] = 0;
+                    switchState1[index] = 1;
+                    }
+                else    
+                    {switchMode[index] = 0;
+                    switchState[index] = (int)line[9]-48;
+                    switchK[index][0] = (int)line[11]-48;
+                    switchK[index][1] = (int)line[13]-48;
+                    switchK[index][2] = (int)line[15]-48;
+                    switchK[index][3] = (int)line[17]-48;
+                    switchState0[index] = 0;
+                    switchState1[index] = 1;
+                    }
+            }else{
+                getline(file,line);
+                break;
+            }
+        }   
+        
+        int i = 0;
+        while (getline(file,line))
+        {
+            if (line.empty())
+                break; 
+            else{             
+                    int j = 0;
+                    
+                    while(line[j]!=' ')
+                    {
+                            trainSpawnTick[i] = trainSpawnTick[i]*(pow(10,1))+(int)line[j]-48;
+                            j++;
+                    } 
+                    j++;
+                        while(line[j]!=' ')
+                    {
+                            trainX[i] = trainX[i] *(pow(10,1))+(int)line[j]-48;
+                            j++;
 
-    }
-    
+                    } 
+                    j++;
+                    while(line[j]!=' ')
+                    {
+                            trainY[i] = trainY[i]*(pow(10,1))+(int)line[j]-48;
+                            j++;
+                    } 
+                    j++;
+                    while(line[j]!=' ')
+                    {
+                            trainDirection[i] = trainDirection[i]*(pow(10,1))+(int)line[j]-48;
+                            j++;
+                    } 
+                    j++;
+                    while(line[j]!=' ')
+                    {
+                            trainColor[i]= trainColor[i]*(pow(10,1))+(int)line[j]-48;
+                            j++;
+                    }
+                    i++;
+                }
+            }
     cout << "Level '" << filename << "' loaded successfully. Grid size: " << rows << "x" << cols << endl;
     return true;
+    }
 }
-
 // ----------------------------------------------------------------------------
 // INITIALIZE LOG FILES
 // ----------------------------------------------------------------------------

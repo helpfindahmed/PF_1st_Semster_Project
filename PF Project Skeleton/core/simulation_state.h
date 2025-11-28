@@ -51,7 +51,7 @@ extern int trainX[10];
 extern int trainY[10];
 extern int trainDirection[10]; 
 extern int trainActive[10];
-extern char trainColor[10];
+extern int trainColor[10];
 extern int trainprevX[10];
 extern int trainprevY[10];
 

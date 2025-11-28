@@ -47,10 +47,8 @@ bool isSwitchTile(int x , int y) {
 // ----------------------------------------------------------------------------
 int getSwitchIndex(char switchChar) { //we get switchChar when we read from the file and load the variables with actual data
     if (switchChar >= 'A' && switchChar <= 'Z') {
-       
         return switchChar - 'A'; 
     }
-    
     return -1;
 }
 // ----------------------------------------------------------------------------
