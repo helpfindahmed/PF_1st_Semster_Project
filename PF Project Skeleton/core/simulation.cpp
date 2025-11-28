@@ -24,7 +24,26 @@ void initializeSimulation(char* filename) {
 
 void simulateOneTick() {
     tick++;
-    //update all the logs too here
+      // Phase 1: 
+    spawnTrainsForTick();
+    // Phase 2: 
+    determineAllRoutes();
+    // Phase 3: 
+    updateSwitchCounters();  
+    // Phase 4: 
+    queueSwitchFlips();      
+    // Phase 5: 
+    detectCollisions();
+    moveAllTrains();
+    applyDeferredFlips();      
+    // Phase 6: 
+    checkArrivals();
+    // Phase 7:        
+  
+    // Update logs
+    logTrainTrace();   
+    logSwitchState();  
+    
 }
 
 // ----------------------------------------------------------------------------
