@@ -73,14 +73,12 @@ void queueSwitchFlips() {
             }
 
             if (needsFlip) {
-                // Rule (PDF): Counters reset on flip -> reset all 4 counters
+                //Counters reset on flip -> reset all 4 counters
                 for (int j = 0; j < 4; ++j) {
                     switchEntryCount[i][j] = 0;
                 }
             }
         }
-        
-        
         if (needsFlip) {
             switchFlipQueued[i] = true;
         }

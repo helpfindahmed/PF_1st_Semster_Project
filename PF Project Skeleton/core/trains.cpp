@@ -26,7 +26,6 @@ int plannedDirection[10] = {};
 // Activate trains scheduled for this tick.
 // ----------------------------------------------------------------------------
 void spawnTrainsForTick() {
-
     for (int i = 0 ; i < maxTrains ; i ++)
     {
         if(trainActive[i]==0)

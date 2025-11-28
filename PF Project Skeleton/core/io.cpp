@@ -8,7 +8,8 @@
 #include <string>
 #include <iostream>
 using namespace std;
-
+int seed;
+string weather;
 // ============================================================================
 // IO.CPP - Level I/O and logging
 // ============================================================================
@@ -25,7 +26,64 @@ bool loadLevelFile(const char* filename) {
         cout << "Error: could not load the file " << filename << endl; 
         return false;
     }else{
-        //read all data from file and put into variables.
+        string line;
+        char ch;
+            
+        while (getline(file, line)) {
+            if (line == "ROWS:")
+                break;
+        }
+        file >> rows;
+                
+        while (getline(file, line)) {
+            if (line == "COLS:")
+                break;
+        }
+        file >> cols;
+        
+        while (getline(file, line)) {
+            if (line == "SEED:")
+                break;
+        }
+        file >> seed;
+        
+        while (getline(file, line)) {
+            if (line == "WEATHER:")
+                break;
+        }
+        file >> weather;
+        
+        grid = new char[rows * cols];    
+        for (int k = 0; k < 2 * cols; ++k) {
+            grid[k] = ' ';
+        }
+
+        while (getline(file, line)) {
+            if (line == "MAP:")
+                break;
+        }
+     
+        int current_row = 0;
+        int current_index = 2 * cols; 
+        
+        while (current_row < rows && getline(file, line)) {
+            
+            if (line == "SWITCHES:") {
+                break; 
+            }
+            
+            if (line.empty()) {
+                continue; 
+            }
+            for (int k = 0; k < cols; k++) {
+                if (k < 40) {
+                    grid[current_index++] = line[k];
+                }
+            }
+            
+            current_row++;
+        }
+
     }
     
     cout << "Level '" << filename << "' loaded successfully. Grid size: " << rows << "x" << cols << endl;
@@ -55,7 +113,7 @@ void initializeLogFiles() {
     
     ofstream signals_log("signals.csv");
     if (signals_log.is_open()) {
-        signals_log << "TICK,SWITCH_ID,COLOR\n";
+        signals_log << "TICK,SWITCH_ID,colsOR\n";
         signals_log.close();
     }
 }
@@ -103,9 +161,9 @@ void logSwitchState(int switchIndex) {
 // ----------------------------------------------------------------------------
 // LOG SIGNAL STATE
 // ----------------------------------------------------------------------------
-// Append tick, switch id, signal color to signals.csv.
+// Append tick, switch id, signal colsor to signals.csv.
 // ----------------------------------------------------------------------------
-void logSignalState(int switchIndex , char signalColor) {
+void logSignalState(int switchIndex , char signalcolsor) {
 
     ofstream signals_log("signals.csv", ios::app); 
     // 3. WRITING: Write the data if the file is open
@@ -113,7 +171,7 @@ void logSignalState(int switchIndex , char signalColor) {
         cout << "Error:File not opened successfully!" << endl;
         return;
     }else {
-        signals_log << tick << "," << switchIndex << "," << signalColor << "\n";
+        signals_log << tick << "," << switchIndex << "," << signalcolsor << "\n";
         signals_log.close();
     }
     
