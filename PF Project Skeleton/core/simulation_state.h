@@ -46,7 +46,7 @@ extern char* grid;
 // GLOBAL STATE: TRAINS
 // ----------------------------------------------------------------------------
 
-extern int trainSpawn[10];
+extern int trainSpawnTick[10];
 extern int trainX[10];
 extern int trainY[10];
 extern int trainDirection[10]; 

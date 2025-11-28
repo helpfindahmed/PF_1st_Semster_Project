@@ -9,7 +9,7 @@
 // SWITCH COUNTER UPDATE
 // ----------------------------------------------------------------------------
 // Increment counters when trains enter switches.
-void updateSwitchCounters(int currentx, int currenty , int prevx, int prevy));
+void updateSwitchCounters(int currentx, int currenty , int prevx, int prevy);
 
 // ----------------------------------------------------------------------------
 // FLIP QUEUE
