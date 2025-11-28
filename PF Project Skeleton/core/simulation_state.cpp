@@ -27,24 +27,25 @@ int trainprevY[10] = {};
 // ----------------------------------------------------------------------------
 // SWITCHES
 // ----------------------------------------------------------------------------
-int maxSwitches = 0; 
+const int maxSwitches = 26; 
 int switchIndex[26] = {}; //get from the getSwitchIndex()
-int switchMode[20] = {}; // 1 = PER_DIR, 2 = GLOBAL
-int switchState[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT . should not that be only 1 and 0?
-int switchEntryCount [20][4];
+int switchMode[26] = {}; //  0 = GLOBAL, 2 = PER_DIR
+int switchState[26] = {}; 
+int switchEntryCount [26][4];
 
-int switchUp[20] = {};
-int switchRight[20] = {};
-int switchDown[20] = {};
-int switchLeft[20] = {};
+// int switchUp[26] = {};
+// int switchRight[26] = {};
+// int switchDown[26] = {};
+// int switchLeft[26] = {};
+int switchK[26][4]; //north, east, south, west
+int switchFlipQueued[26];
+
+int switchX[26] = {};
+int switchY[26] = {};
 
 
-int switchX[20] = {};
-int switchY[20] = {};
-
-
-int switchState0[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
-int switchState1[20] = {}; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
+int switchState0[26] = {}; //1 = north, 2 = east, 3 = south, 4 = west
+int switchState1[26] = {}; 
 
 
 // ----------------------------------------------------------------------------
@@ -85,7 +86,7 @@ void initializeSimulationState() {
     numCrashed = 0;
     isEmergencyHalt = false;
 
-    for (int i = 0; i < maxTrains; ++i) {
+    for (int i = 0; i < 10; ++i) {
         trainSpawnTick[i] = -1;
         trainX[i] = -1;
         trainY[i] = -1;
@@ -99,18 +100,26 @@ void initializeSimulationState() {
         destY[i] = -1;
     }
 
-    for (int i = 0; i < maxSwitches; ++i) {
+    for (int i = 0; i < 26; ++i) {
         switchIndex[i] = -1;
         switchMode[i] = -1;
         switchState[i] = -1;
-        switchUp[i] = -1;
-        switchRight[i] = -1;
-        switchDown[i] = -1;
-        switchLeft[i] = -1;
+        // switchUp[i] = -1;
+        // switchRight[i] = -1;
+        // switchDown[i] = -1;
+        // switchLeft[i] = -1;
         switchX[i] = -1;
         switchY[i] = -1;
         switchState0[i] = -1;
         switchState1[i] = -1;
+        switchFlipQueued[i] = -1;
+    }
+
+    for (int i = 0; i < 26; i++){
+        for (int j = 0; j < 4; j++){
+            switchK[i][j] = -1;
+            switchEntryCount[i][j] = -1;
+        }
     }
 
     if (grid) { //since grid was DMA we need to delete to ensure no memory leakage so deleting process here
