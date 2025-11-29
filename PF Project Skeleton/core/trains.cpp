@@ -232,8 +232,94 @@ void moveAllTrains() {
 // Resolve same-tile, swap, and crossing conflicts.
 // ----------------------------------------------------------------------------
 void detectCollisions() {
+    bool crashed[10] = {};
+    bool waiting[10] = {};
+    
+    
+    for (int i = 0; i < maxTrains; i++) {
+        if (trainActive[i] == 0 || crashed[i]) continue;
+        
+        for (int j = i + 1; j < maxTrains; j++) {
+            if (trainActive[j] == 0 || crashed[j]) continue;
+            
+            
+            if (plannedX[i] == plannedX[j] && plannedY[i] == plannedY[j]) {
+                // Calculate Manhattan distance for train i
+                int dxi = destX[i] - trainX[i];
+                int dyi = destY[i] - trainY[i];
+                if (dxi < 0) dxi = -dxi;
+                if (dyi < 0) dyi = -dyi;
+                int distI = dxi + dyi;
+                
+                // Calculate Manhattan distance for train j
+                int dxj = destX[j] - trainX[j];
+                int dyj = destY[j] - trainY[j];
+                if (dxj < 0) dxj = -dxj;
+                if (dyj < 0) dyj = -dyj;
+                int distJ = dxj + dyj;
+                
+                if (distI > distJ) {
+                    
+                    waiting[j] = true;
+                } else if (distJ > distI) {
+                    
+                    waiting[i] = true;
+                } else {
+                    
+                    crashed[i] = true;
+                    crashed[j] = true;
+                }
+            }
+            
+           
+            if (plannedX[i] == trainX[j] && plannedY[i] == trainY[j] &&
+                plannedX[j] == trainX[i] && plannedY[j] == trainY[i]) {
+                // Calculate Manhattan distance for train i
+                int dxi = destX[i] - trainX[i];
+                int dyi = destY[i] - trainY[i];
+                if (dxi < 0) dxi = -dxi;
+                if (dyi < 0) dyi = -dyi;
+                int distI = dxi + dyi;
+                
+                // Calculate Manhattan distance for train j
+                int dxj = destX[j] - trainX[j];
+                int dyj = destY[j] - trainY[j];
+                if (dxj < 0) dxj = -dxj;
+                if (dyj < 0) dyj = -dyj;
+                int distJ = dxj + dyj;
+                
+                if (distI > distJ) {
+                    
+                    waiting[j] = true;
+                } else if (distJ > distI) {
+                    
+                    waiting[i] = true;
+                } else {
+                  
+                    crashed[i] = true;
+                    crashed[j] = true;
+                }
+            }
+        }
+    }
+    
+    
+    for (int i = 0; i < maxTrains; i++) {
+        if (waiting[i] && !crashed[i]) {
+            plannedX[i] = trainX[i];
+            plannedY[i] = trainY[i];
+            plannedDirection[i] = trainDirection[i];
+        }
+    }
+    
+    
+    for (int i = 0; i < maxTrains; i++) {
+        if (crashed[i]) {
+            trainActive[i] = 0;
+            numCrashed++;
+        }
+    }
 }
-
 // ----------------------------------------------------------------------------
 // CHECK ARRIVALS
 // ----------------------------------------------------------------------------
