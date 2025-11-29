@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
     runApp();
     
     cleanupApp();
+    writeMetrics();
     cout << "Application closed" << endl;
 
     return 0;

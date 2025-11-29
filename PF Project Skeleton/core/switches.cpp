@@ -47,7 +47,7 @@ void updateSwitchCounters() {
 // ----------------------------------------------------------------------------
 void queueSwitchFlips() {
     // Loop through all defined switches
-    for (int i = 0; i < maxSwitch; i++) {
+    for (int i = 0; i < maxSwitches; i++) {
         bool needsFlip = false;
         
         // 1. Check GLOBAL Mode (Mode 0)
@@ -91,7 +91,7 @@ void queueSwitchFlips() {
 // Apply queued flips after movement.
 // ----------------------------------------------------------------------------
 void applyDeferredFlips() {
-     for (int i = 0; i < maxSwitch; i++) {
+     for (int i = 0; i < maxSwitches; i++) {
         if (switchFlipQueued[i]) {
 
             //switchState[i] = 1 - switchState[i];

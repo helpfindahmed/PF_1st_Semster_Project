@@ -21,7 +21,7 @@ extern int maxTrains;
 // ----------------------------------------------------------------------------
 // SWITCH CONSTANTS
 // ----------------------------------------------------------------------------
-extern int maxSwitch;
+
 
 // ----------------------------------------------------------------------------
 // WEATHER CONSTANTS
@@ -59,11 +59,11 @@ extern int trainprevY[10];
 // GLOBAL STATE: SWITCHES (A-Z mapped to 0-25)
 // ----------------------------------------------------------------------------
 
-extern const int maxSwitches = 0; 
-extern int switchIndex[26] = {}; 
-extern int switchMode[20];
-extern int switchState[20];
-extern int switchEntryCount [20][4];
+extern const int maxSwitches; 
+extern int switchIndex[26]; 
+extern int switchMode[26];
+extern int switchState[26];
+extern int switchEntryCount [26][4];
 
 // extern int switchUp[20];
 // extern int switchRight[20];
@@ -71,11 +71,11 @@ extern int switchEntryCount [20][4];
 // extern int switchLeft[20];
 extern int switchK[26][4];
 extern int switchFlipQueued[26];
-extern int switchX[20];
-extern int switchY[20];
+extern int switchX[26];
+extern int switchY[26];
 
-extern int switchState0[20];
-extern int switchState1[20];
+extern int switchState0[26];
+extern int switchState1[26];
 
 // ----------------------------------------------------------------------------
 // GLOBAL STATE: SPAWN POINTS
