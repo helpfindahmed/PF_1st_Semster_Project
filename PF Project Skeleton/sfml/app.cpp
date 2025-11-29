@@ -32,28 +32,177 @@ static int g_lastMouseX = 0;
 static int g_lastMouseY = 0;
 
 // Grid rendering parameters
-static float g_cellSize = 40.0f;
+static float g_cellSize = 32.0f;
 static float g_gridOffsetX = 50.0f;
 static float g_gridOffsetY = 50.0f;
 
+
+static Texture trackTexture;      // 5.png - tracks
+static Texture tileTexture;     // 3.png - switches
+
+
+
+void printGrid(RenderWindow& window){
+    bool hasTrackSprites = (trackTexture.getSize().x > 0);
+    bool hasTileSprites = (tileTexture.getSize().x > 0);
+    
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            float x = g_gridOffsetX + (j * g_cellSize);
+            float y = g_gridOffsetY + (i * g_cellSize);
+            char tile = grid[i * cols + j];
+            
+            Sprite sprite;
+            bool drewSprite = false;
+            float spriteWidth = 0;
+            float spriteHeight = 0;
+            
+            // Try to draw from track texture first (5.png)
+            if (hasTrackSprites) {
+                sprite.setTexture(trackTexture);
+                
+                switch(tile) {
+                      // Horizontal track: (44, 63) size 340x142
+                    case '=':  // Safety buffer (also horizontal track visually)
+                        sprite.setTextureRect(IntRect(44, 63, 340, 142));
+                        spriteWidth = 340;
+                        spriteHeight = 142;
+                        drewSprite = true;
+                        break;
+                        
+                    case '|':  // Vertical track: (450, 62) size 138x239
+                        sprite.setTextureRect(IntRect(450, 62, 138, 239));
+                        spriteWidth = 138;
+                        spriteHeight = 239;
+                        drewSprite = true;
+                        break;
+                        
+                    case '/':  // Curve slash: (46, 295) size 315x322
+                        sprite.setTextureRect(IntRect(46, 295, 315, 322));
+                        spriteWidth = 315;
+                        spriteHeight = 322;
+                        drewSprite = true;
+                        break;
+                        
+                    case '\\':  // Curve backslash (flip / horizontally)
+                        sprite.setTextureRect(IntRect(46, 295, 315, 322));
+                        spriteWidth = 315;
+                        spriteHeight = 322;
+                        drewSprite = true;
+                        break;
+                        
+                    case '+':  // Crossing: (362, 666) size 295x314
+                        sprite.setTextureRect(IntRect(362, 666, 295, 314));
+                        spriteWidth = 295;
+                        spriteHeight = 314;
+                        drewSprite = true;
+                        break;
+                }
+                
+            
+            }
+            
+            // Try to draw from tile texture (3.png) for S, D, and switches
+            if (!drewSprite && hasTileSprites) {
+                sprite.setTexture(tileTexture);
+                
+                switch(tile) {
+                    case 'S':  // Source/Spawn: (62, 99) size 171x174
+                        sprite.setTextureRect(IntRect(62, 99, 171, 174));
+                        spriteWidth = 171;
+                        spriteHeight = 174;
+                        drewSprite = true;
+                        break;
+                        
+                    case 'D':  // Destination: (567, 99) size 170x170
+                        sprite.setTextureRect(IntRect(567, 99, 170, 170));
+                        spriteWidth = 170;
+                        spriteHeight = 170;
+                        drewSprite = true;
+                        break;
+                        
+                    default:  // Switches A-Z: (66, 597) size 165x174
+                        if (tile >= 'A' && tile <= 'Z') {
+                            sprite.setTextureRect(IntRect(66, 597, 165, 174));
+                            spriteWidth = 165;
+                            spriteHeight = 174;
+                            drewSprite = true;
+                        }
+                        break;
+                }
+                
+                if (drewSprite) {
+                    sprite.setPosition(x, y);
+                    
+                    // Calculate scale to fit cell size
+                    float scaleX = g_cellSize / spriteWidth;
+                    float scaleY = g_cellSize / spriteHeight;
+                    sprite.setScale(scaleX, scaleY);
+                    
+                    window.draw(sprite);
+                }
+            }
+            
+            // If sprite not drawn, use colored rectangles (fallback)
+            if (!drewSprite) {
+                RectangleShape Rectangle(Vector2f(g_cellSize, g_cellSize));
+                Rectangle.setPosition(x, y);
+                
+                if (tile == 'S' || tile == 'D') Rectangle.setFillColor(Color(100, 255, 100));
+                else if (tile >= 'A' && tile <= 'Z') Rectangle.setFillColor(Color(255, 180, 50));
+                else if (tile == '=') Rectangle.setFillColor(Color(100, 100, 255)); 
+                else if (tile == '+' || tile == '|' || tile == '-' || tile == '/' || tile == '\\') Rectangle.setFillColor(Color(150, 150, 150)); 
+                else Rectangle.setFillColor(Color(50, 50, 50)); 
+                
+                Rectangle.setOutlineThickness(1.0f);
+                Rectangle.setOutlineColor(Color(20, 20, 20));
+                
+                window.draw(Rectangle);
+            }
+        }
+    }
+}
+
 // ----------------------------------------------------------------------------
-// INITIALIZATION
+// INITIALIZATION// Draw the simulation elements
+
 // ----------------------------------------------------------------------------
 // This function will initialize the SFML application window and resources.
-// It creates a render window with a specified size and title, sets the
+// It creates a render window with a specified size and title, sets the// Draw the simulation elements
+
 // framerate limit, attempts to load a font file for text rendering, and
 // initializes the camera view. Returns true on success, false on failure.
 // This should be called once at the start of the application before entering
 // the main loop.
-// ----------------------------------------------------------------------------
+// --------------------------------or--------------------------------------------
 bool initializeApp() {
-    g_window = new RenderWindow(VideoMode(480,580), "Switchback Rails");
+    unsigned int windowWidth =  cols * (int)g_cellSize + 100;
+    unsigned int windowHeight = rows * (int)g_cellSize + 100;
+    g_window = new RenderWindow(VideoMode(windowWidth, windowHeight), "Switchback Rails");
     if (!g_window) {
         return false;
     }
-    g_window->setFramerateLimit(60);
+    g_window->setFramerateLimit(10);  // Slower so you can see simulation
+    
+    // Load track sprites (5.png)
+    printf("Loading sprites...\n");
+    if (!trackTexture.loadFromFile("Sprites/5.png")) {
+        printf("Warning: Could not load 5.png - using colored rectangles\n");
+    } else {
+        printf("SUCCESS: 5.png loaded! Image size: %dx%d\n", 
+               trackTexture.getSize().x, trackTexture.getSize().y);
+    }
+    
+    // Load switch sprites (3.png) - we'll add this later
+    if (!tileTexture.loadFromFile("Sprites/3.png")) {
+        printf("Warning: Could not load 3.png\n");
+    } else {
+        printf("SUCCESS: 3.png loaded!\n");
+    }
+    
     return true;
 }
+
 
 // ----------------------------------------------------------------------------
 // MAIN RUN LOOP
@@ -83,7 +232,8 @@ void runApp() {
             }
         }
         
-        g_window->clear(Color(255,255,255));
+        g_window->clear(Color(50,50,50));
+        printGrid(*g_window);
         g_window->display();
     }
 }
