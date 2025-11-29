@@ -80,6 +80,7 @@ bool isEmergencyHalt = false;
 
 void initializeSimulationState() {
     rows = -1;
+ 
     cols = -1;
     tick = 0;
     numArrived = 0;
@@ -93,7 +94,7 @@ void initializeSimulationState() {
         trainprevX[i] = -1;
         trainprevY[i] = -1;
         trainDirection[i] = -1;
-        trainActive[i] = -1;
+        trainActive[i] = 0;
         spawnX[i] = -1;
         spawnY[i] = -1;
         destX[i] = -1;
@@ -113,6 +114,7 @@ void initializeSimulationState() {
         switchState0[i] = -1;
         switchState1[i] = -1;
         switchFlipQueued[i] = -1;
+       
     }
 
     for (int i = 0; i < 26; i++){

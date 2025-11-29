@@ -1,6 +1,9 @@
 #ifndef APP_H
 #define APP_H
-
+#include <SFML/Graphics.hpp>
+namespace sf {
+    class RenderWindow;
+}
 // ============================================================================
 // APP.H - SFML application for visualization (NO CLASSES)
 // ============================================================================
@@ -19,7 +22,7 @@ bool initializeApp();
 // ----------------------------------------------------------------------------
 // Run the main application loop
 void runApp();
-
+void printGrid(sf::RenderWindow& window);
 // ----------------------------------------------------------------------------
 // CLEANUP
 // ----------------------------------------------------------------------------

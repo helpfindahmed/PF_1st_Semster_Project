@@ -23,7 +23,8 @@ bool isTrackTile(int x, int y) {
         return false;
     }
     char tile = grid[(x * cols) + y];
-    return (tile == '-' || tile == '|' || tile == '+' || tile == '/' || tile == '\\' || tile == '+');
+    return (tile == '-' || tile == '|' || tile == '+' || tile == '/' || tile == '\\' || tile == '='
+            || tile == 'S' || tile == 'D' || (tile >= 'A' && tile <= 'Z'));
 }
 
 // ----------------------------------------------------------------------------
@@ -32,7 +33,6 @@ bool isTrackTile(int x, int y) {
 // Returns true if the tile is 'A'..'Z'.
 // ----------------------------------------------------------------------------
 bool isSwitchTile(int x , int y) {
-
      if (!isInBounds(x, y)) {
         return false;
     }
@@ -49,6 +49,11 @@ int getSwitchIndex(char switchChar) { //we get switchChar when we read from the 
     if (switchChar >= 'A' && switchChar <= 'Z') {
         return switchChar - 'A'; 
     }
+
+    if (switchChar == 'S' || switchChar == 'D') {
+            return -1;
+        }
+        
     return -1;
 }
 // ----------------------------------------------------------------------------

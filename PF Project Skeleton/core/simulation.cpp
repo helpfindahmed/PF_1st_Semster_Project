@@ -16,6 +16,7 @@
 
 void initializeSimulation(char* filename) {
     loadLevelFile(filename); //a pointer pointing to the first element's first character of C-string from command line
+    initializeLogFiles();
 }
 
 // ----------------------------------------------------------------------------
@@ -23,7 +24,6 @@ void initializeSimulation(char* filename) {
 // ----------------------------------------------------------------------------
 
 void simulateOneTick() {
-    tick++;
       // Phase 1: 
     spawnTrainsForTick();
     // Phase 2: 
@@ -39,15 +39,17 @@ void simulateOneTick() {
     // Phase 6: 
     checkArrivals();
     // Phase 7:        
-  
+    
     // Update logs
     for(int i = 0; i < 10; i++){
         if (trainActive[i])
             logTrainTrace(trainColor[i]);   
     }
     for (int i = 0; i < 26; i++){
-        logSwitchState(i);  
+        if (switchMode[i] != -1)
+            logSwitchState(i);  
     }
+    tick++;
 }
 
 // ----------------------------------------------------------------------------

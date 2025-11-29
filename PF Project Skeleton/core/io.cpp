@@ -10,7 +10,6 @@
 #include <cmath>
 using namespace std;
 int seed;
-
 // ============================================================================
 // IO.CPP - Level I/O and logging
 // ============================================================================
@@ -20,148 +19,344 @@ int seed;
 // ----------------------------------------------------------------------------
 // Load a .lvl file into global state.
 // ----------------------------------------------------------------------------
+
+
+
+
+// bool loadLevelFile(const char* filename) {
+//     initializeSimulationState(); 
+//     ifstream file (filename);
+//     if (!file.is_open()){
+//         cout << "Error: could not load the file " << filename << endl; 
+//         return false;
+//     }else{
+//         string line;
+            
+//         while (getline(file, line)) {
+//             if (line == "ROWS:")
+//                 break;
+//         }
+//         file >> rows;
+                
+//         while (getline(file, line)) {
+//             if (line == "COLS:")
+//                 break;
+//         }
+//         file >> cols;
+        
+//         while (getline(file, line)) {
+//             if (line == "SEED:")
+//                 break;
+//         }
+//         file >> seed;
+        
+//         while (getline(file, line)) {
+//             if (line == "WEATHER:")
+//                 break;
+//         }
+//         file >> line;
+        
+//         grid = new char[rows * cols];    
+//         for (int k = 0; k < rows * cols; k++) {
+//             grid[k] = ' ';
+//         }
+
+//         while (getline(file, line)) {
+//             if (line == "MAP:")
+//                 break;
+//         }
+     
+//         int current_row = 2;
+//         int current_index = 2 * cols; 
+        
+//         int destCount = 0;
+//         int tempDestX[10] = {};
+//         int tempDestY[10] = {};
+//         while (current_row < rows && getline(file, line)) {
+            
+//             if (line == "SWITCHES:") {
+//                 break; 
+//             }
+            
+//             if (line.empty()) {
+//                 continue; 
+//             }
+//             for (int k = 0; k < cols; k++) {
+//                     if (line[k]>='A' && line[k]<='Z'){
+//                         int idx = getSwitchIndex(line[k]);
+//                         switchX[idx] = current_row; 
+//                         switchY[idx] = k;
+                       
+//                     }
+//                     if (line[k] == 'D' && destCount < 10) {
+//                         tempDestX[destCount] = current_row;
+//                         tempDestY[destCount] = k;
+//                         destCount++;
+//                     }
+//                     grid[current_index++] = line[k];
+//                 }
+//             current_row++;
+//         }
+        
+//         while (getline(file,line)){ //A PER_DIR 0 2 2 2 2 STRAIGHT TURN
+//             if (line == "TRAINS:") break;
+//             if (!line.empty()){
+//                 int index = getSwitchIndex(line[0]);
+//                 switchIndex[index] = index;
+//                 if (line[2] == 'P')
+//                     {switchMode[index] = 2;
+//                     switchState[index] = (int)line[10]-48;
+//                     switchK[index][0] = (int)line[12]-48;
+//                     switchK[index][1] = (int)line[14]-48;
+//                     switchK[index][2] = (int)line[16]-48;
+//                     switchK[index][3] = (int)line[18]-48;
+//                     switchState0[index] = 0;
+//                     switchState1[index] = 1;
+//                     }
+//                 else    
+//                     {switchMode[index] = 0;
+//                     switchState[index] = (int)line[9]-48;
+//                     switchK[index][0] = (int)line[11]-48;
+//                     switchK[index][1] = (int)line[13]-48;
+//                     switchK[index][2] = (int)line[15]-48;
+//                     switchK[index][3] = (int)line[17]-48;
+//                     switchState0[index] = 0;
+//                     switchState1[index] = 1;
+//                     }
+//             }else{
+//                 getline(file,line);
+//                 break;
+//             }
+//         }   
+        
+//         int i = 0;
+//         while (getline(file,line))
+//         {
+//             if (line.empty())
+//                 break; 
+//             else{             
+//                     int j = 0;
+                    
+//                     while(line[j]!=' ')
+//                     {
+//                             trainSpawnTick[i] = trainSpawnTick[i]*10+(int)line[j]-48;
+//                             j++;
+//                     } 
+//                     j++;
+//                         while(line[j]!=' ')
+//                     {
+//                             trainX[i] = trainX[i] *10+(int)line[j]-48;
+//                             j++;
+
+//                     } 
+//                     j++;
+//                     while(line[j]!=' ')
+//                     {
+//                             trainY[i] = trainY[i]*10+(int)line[j]-48;
+//                             j++;
+//                     } 
+//                     j++;
+//                     while(line[j]!=' ')
+//                     {
+//                             trainDirection[i] = trainDirection[i]*10+(int)line[j]-48;
+//                             j++;
+//                     } 
+//                     j++;
+//                     while(line[j]!=' ')
+//                     {
+//                             trainColor[i]= trainColor[i]*10+(int)line[j]-48;
+//                             j++;
+//                     }
+
+//                     spawnX[i] = trainX[i];
+//                     spawnY[i] = trainY[i];
+//                     if (destCount > 0) {
+//                         int destIndex = i % destCount;  // Round-robin assignment
+//                         destX[i] = tempDestX[destIndex];
+//                         destY[i] = tempDestY[destIndex];
+//                     }
+                    
+//                     i++;
+//                 }
+//             }
+//             maxTrains = i;
+        
+//     cout << "Level '" << filename << "' loaded successfully. Grid size: " << rows << "x" << cols << endl;
+//     return true;
+//     }
+// }
+
+
+
 bool loadLevelFile(const char* filename) {
     initializeSimulationState(); 
-    ifstream file (filename);
+    ifstream file(filename);
     if (!file.is_open()){
         cout << "Error: could not load the file " << filename << endl; 
         return false;
-    }else{
-        string line;
-            
-        while (getline(file, line)) {
-            if (line == "ROWS:")
-                break;
-        }
-        file >> rows;
-                
-        while (getline(file, line)) {
-            if (line == "COLS:")
-                break;
-        }
-        file >> cols;
-        
-        while (getline(file, line)) {
-            if (line == "SEED:")
-                break;
-        }
-        file >> seed;
-        
-        while (getline(file, line)) {
-            if (line == "WEATHER:")
-                break;
-        }
-        file >> line;
-        
-        grid = new char[rows * cols];    
-        for (int k = 0; k < 2 * cols; ++k) {
-            grid[k] = ' ';
-        }
-
-        while (getline(file, line)) {
-            if (line == "MAP:")
-                break;
-        }
-     
-        int current_row = 2;
-        int current_index = 2 * cols; 
-        
-        while (current_row < rows && getline(file, line)) {
-            
-            if (line == "SWITCHES:") {
-                break; 
-            }
-            
-            if (line.empty()) {
-                continue; 
-            }
-            for (int k = 0; k < cols; k++) {
-                    if (line[k]>='A' && line[k]<='Z'){
-                        int idx = getSwitchIndex(line[k]);
-                        switchY[idx] = current_row;
-                        switchX[idx] = k;
-                    }
-                    grid[current_index++] = line[k];
-                }
-            current_row++;
-        }
-        
-        while (getline(file,line)){ //A PER_DIR 0 2 2 2 2 STRAIGHT TURN
-            if (line == "TRAINS:") break;
-            if (!line.empty()){
-                int index = getSwitchIndex(line[0]);
-                switchIndex[index] = index;
-                if (line[2] == 'P')
-                    {switchMode[index] = 2;
-                    switchState[index] = (int)line[10]-48;
-                    switchK[index][0] = (int)line[12]-48;
-                    switchK[index][1] = (int)line[14]-48;
-                    switchK[index][2] = (int)line[16]-48;
-                    switchK[index][3] = (int)line[18]-48;
-                    switchState0[index] = 0;
-                    switchState1[index] = 1;
-                    }
-                else    
-                    {switchMode[index] = 0;
-                    switchState[index] = (int)line[9]-48;
-                    switchK[index][0] = (int)line[11]-48;
-                    switchK[index][1] = (int)line[13]-48;
-                    switchK[index][2] = (int)line[15]-48;
-                    switchK[index][3] = (int)line[17]-48;
-                    switchState0[index] = 0;
-                    switchState1[index] = 1;
-                    }
-            }else{
-                getline(file,line);
-                break;
-            }
-        }   
-        
-        int i = 0;
-        while (getline(file,line))
-        {
-            if (line.empty())
-                break; 
-            else{             
-                    int j = 0;
-                    
-                    while(line[j]!=' ')
-                    {
-                            trainSpawnTick[i] = trainSpawnTick[i]*(pow(10,1))+(int)line[j]-48;
-                            j++;
-                    } 
-                    j++;
-                        while(line[j]!=' ')
-                    {
-                            trainX[i] = trainX[i] *(pow(10,1))+(int)line[j]-48;
-                            j++;
-
-                    } 
-                    j++;
-                    while(line[j]!=' ')
-                    {
-                            trainY[i] = trainY[i]*(pow(10,1))+(int)line[j]-48;
-                            j++;
-                    } 
-                    j++;
-                    while(line[j]!=' ')
-                    {
-                            trainDirection[i] = trainDirection[i]*(pow(10,1))+(int)line[j]-48;
-                            j++;
-                    } 
-                    j++;
-                    while(line[j]!=' ')
-                    {
-                            trainColor[i]= trainColor[i]*(pow(10,1))+(int)line[j]-48;
-                            j++;
-                    }
-                    i++;
-                }
-            }
-    cout << "Level '" << filename << "' loaded successfully. Grid size: " << rows << "x" << cols << endl;
-    return true;
     }
+    
+    string line;
+    
+    // Read ROWS
+    while (getline(file, line)) {
+        if (line == "ROWS:")
+            break;
+    }
+    file >> rows;
+    
+    // Read COLS
+    while (getline(file, line)) {
+        if (line == "COLS:")
+            break;
+    }
+    file >> cols;
+    
+    // Read SEED
+    while (getline(file, line)) {
+        if (line == "SEED:")
+            break;
+    }
+    file >> seed;
+    
+    // Read WEATHER
+    while (getline(file, line)) {
+        if (line == "WEATHER:")
+            break;
+    }
+    file >> line;
+    
+    // Allocate grid
+    grid = new char[rows * cols];
+    for (int k = 0; k < rows * cols; k++) {
+        grid[k] = ' ';
+    }
+    
+    // Skip to MAP section
+    while (getline(file, line)) {
+        if (line == "MAP:")
+            break;
+    }
+    
+    // Read the map - fill the ENTIRE grid from row 0
+    int destCount = 0;
+    int tempDestX[10] = {};
+    int tempDestY[10] = {};
+    
+    for (int row = 0; row < rows; row++) {
+        if (!getline(file, line)) break;
+        
+        if (line == "SWITCHES:") break;
+        
+        for (int col = 0; col < cols && col < (int)line.length(); col++) {
+            char tile = line[col];
+            grid[row * cols + col] = tile;
+            
+            // Store switch positions (exclude S and D)
+            if (tile >= 'A' && tile <= 'Z' && tile != 'S' && tile != 'D') {
+                int idx = getSwitchIndex(tile);
+                if (idx != -1) {
+                    switchX[idx] = row;
+                    switchY[idx] = col;
+                }
+            }
+            
+            // Store destination positions
+            if (tile == 'D' && destCount < 10) {
+                tempDestX[destCount] = row;
+                tempDestY[destCount] = col;
+                destCount++;
+            }
+        }
+    }
+    
+    cout << "Found " << destCount << " destinations" << endl;
+    
+    // Read SWITCHES section
+    while (getline(file, line)) {
+        if (line == "TRAINS:") break;
+        if (line.empty()) continue;
+        
+        int index = getSwitchIndex(line[0]);
+        if (index == -1) continue;
+        
+        switchIndex[index] = index;
+        
+        if (line.length() > 2 && line[2] == 'P') {
+            switchMode[index] = 2; // PER_DIR
+            switchState[index] = (int)line[10] - 48;
+            switchK[index][0] = (int)line[12] - 48;
+            switchK[index][1] = (int)line[14] - 48;
+            switchK[index][2] = (int)line[16] - 48;
+            switchK[index][3] = (int)line[18] - 48;
+            switchState0[index] = 0;
+            switchState1[index] = 1;
+        } else if (line.length() > 2 && line[2] == 'G') {
+            switchMode[index] = 0; // GLOBAL
+            switchState[index] = (int)line[9] - 48;
+            switchK[index][0] = (int)line[11] - 48;
+            switchK[index][1] = (int)line[13] - 48;
+            switchK[index][2] = (int)line[15] - 48;
+            switchK[index][3] = (int)line[17] - 48;
+            switchState0[index] = 0;
+            switchState1[index] = 1;
+        }
+    }
+    
+    // Read TRAINS section
+    int trainCount = 0;
+    while (getline(file, line) && !line.empty() && trainCount < 10) {
+        int values[5] = {0, 0, 0, 0, 0};
+        int valueIndex = 0;
+        int j = 0;
+        
+        // Parse 5 space-separated integers
+        while (valueIndex < 5 && j < (int)line.length()) {
+            if (line[j] == ' ') {
+                valueIndex++;
+                j++;
+                j++;
+            } else if (line[j] >= '0' && line[j] <= '9') {
+                values[valueIndex] = values[valueIndex] * 10 + (line[j] - '0');
+                j++;
+            } else {
+                j++;
+            }
+        }
+        
+        trainSpawnTick[trainCount] = values[0];
+        trainX[trainCount] = values[1];
+        trainY[trainCount] = values[2];
+        trainDirection[trainCount] = values[3];
+        trainColor[trainCount] = values[4];
+        
+        spawnX[trainCount] = trainX[trainCount];
+        spawnY[trainCount] = trainY[trainCount];
+        
+        // Assign destination round-robin
+        if (destCount > 0) {
+            int destIndex = trainCount % destCount;
+            destX[trainCount] = tempDestX[destIndex];
+            destY[trainCount] = tempDestY[destIndex];
+        }
+        
+        cout << "Train " << trainCount << ": spawn=(" << trainX[trainCount] << "," 
+             << trainY[trainCount] << ") dest=(" << destX[trainCount] << "," 
+             << destY[trainCount] << ")" << endl;
+        
+        trainCount++;
+    }
+    
+    maxTrains = trainCount;
+    
+    file.close();
+    cout << "Level loaded: " << rows << "x" << cols << ", " << maxTrains << " trains" << endl;
+    return true;
 }
+
+
+
+
 // ----------------------------------------------------------------------------
 // INITIALIZE LOG FILES
 // ----------------------------------------------------------------------------
@@ -171,14 +366,14 @@ void initializeLogFiles() {
 
     ofstream trace_log("trace.csv");
     if (trace_log.is_open()) {
-        trace_log << "TICK,TRAIN_ID,X,Y,DIRECTION,STATE\n";
+        trace_log << "Tick,TrainID,X,Y,Direction,State\n";
         trace_log.close();
     }
 
     
     ofstream switches_log("switches.csv");
     if (switches_log.is_open()) {
-        switches_log << "TICK,SWITCH_ID,X,Y,STATE\n";
+        switches_log << "Tick,Switch,Mode,State\n";
         switches_log.close();
     }
     
@@ -221,10 +416,17 @@ void logSwitchState(int switchIndex) {
         cout << "Error:File not opened successfully!" << endl;
         return;
     }else{
+        string modeStr;
+        if (switchMode[switchIndex] == 0) {
+            modeStr = "GLOBAL";
+        } else if (switchMode[switchIndex] == 2) {
+            modeStr = "PER_DIR";
+        } else {
+            modeStr = "UNKNOWN";
+        }
          switches_log << tick << ","
-                     << switchIndex << ","
-                     << switchX[switchIndex] << ","
-                     << switchY[switchIndex] << ","
+                     << (char) (switchIndex + 'A') << ","
+                     << modeStr << ","
                      << switchState[switchIndex] << "\n";
         switches_log.close();
     }
