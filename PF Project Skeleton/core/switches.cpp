@@ -19,12 +19,12 @@ const int Dirwest = 3;
 void updateSwitchCounters() {
     for (int i = 0; i < maxTrains; i++){
         if (trainActive[i] == 0)
-            return;
+            continue;
         if (isSwitchTile(trainprevX[i], trainprevY[i])){
             int conversion = trainX[i] * cols + trainY[i];
             int switchnum = getSwitchIndex(grid[conversion]);
             if (switchnum == -1)
-                return;
+                continue;
 
             int entryDir = -1; 
             if (trainX[i] > trainprevX[i]) entryDir = Direast;
