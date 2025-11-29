@@ -1,6 +1,6 @@
 #include "grid.h"
 #include "simulation_state.h"
-
+#include <iostream>
 // ============================================================================
 // GRID.CPP - Grid utilities
 // ============================================================================
@@ -11,7 +11,7 @@
 // Returns true if x,y are within bounds.
 // ----------------------------------------------------------------------------
 bool isInBounds(int x , int y) {
-    return (x >= 0 && x < rows && y >= 0 && y < cols);
+    return (x >= 2 && x < cols && y >= 2 && y < rows);
 }
 // ----------------------------------------------------------------------------
 // Check if a tile is a track tile.
@@ -22,7 +22,8 @@ bool isTrackTile(int x, int y) {
     if (!isInBounds(x, y)) {
         return false;
     }
-    char tile = grid[(x * cols) + y];
+    char tile = grid[(y * cols) + x];
+    std::cout << tile << std::endl;
     return (tile == '-' || tile == '|' || tile == '+' || tile == '/' || tile == '\\' || tile == '='
             || tile == 'S' || tile == 'D' || (tile >= 'A' && tile <= 'Z'));
 }
@@ -36,7 +37,7 @@ bool isSwitchTile(int x , int y) {
      if (!isInBounds(x, y)) {
         return false;
     }
-    char tile = grid[(x * cols) + y];
+    char tile = grid[(y * cols) + x];
     return tile >= 'A' && tile <= 'Z';
 }
 
@@ -53,7 +54,7 @@ int getSwitchIndex(char switchChar) { //we get switchChar when we read from the 
     if (switchChar == 'S' || switchChar == 'D') {
             return -1;
         }
-        
+
     return -1;
 }
 // ----------------------------------------------------------------------------
@@ -91,7 +92,7 @@ bool toggleSafetyTile(int x , int y) {
     if (!isInBounds(x, y)) {
         return false;
     }
-    char tile = grid[(x * cols) + y]; 
+    char tile = grid[(y * cols) + x]; 
     if (tile == '-') {
         tile = '='; 
         return true;
