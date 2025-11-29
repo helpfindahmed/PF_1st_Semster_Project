@@ -10,7 +10,7 @@
 #include <cmath>
 using namespace std;
 int seed;
-string weather;
+
 // ============================================================================
 // IO.CPP - Level I/O and logging
 // ============================================================================
@@ -51,7 +51,7 @@ bool loadLevelFile(const char* filename) {
             if (line == "WEATHER:")
                 break;
         }
-        file >> weather;
+        file >> line;
         
         grid = new char[rows * cols];    
         for (int k = 0; k < 2 * cols; ++k) {
