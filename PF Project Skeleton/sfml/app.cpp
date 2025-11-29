@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <cstdio>
+#include <iostream>
 
 using namespace sf;
 // ============================================================================
@@ -132,9 +133,6 @@ void printGrid(RenderWindow& window){
         window.draw(sprite);
     }
 }
-            
-            
-            
             // Try to draw from tile texture (3.png) for S, D, and switches
             if (!drewSprite && hasTileSprites) {
                 sprite.setTexture(tileTexture);
@@ -185,7 +183,7 @@ void printGrid(RenderWindow& window){
                 else if (tile >= 'A' && tile <= 'Z') Rectangle.setFillColor(Color(255, 180, 50));
                 else if (tile == '=') Rectangle.setFillColor(Color(100, 100, 255)); 
                 else if (tile == '+' || tile == '|' || tile == '=' ) Rectangle.setFillColor(Color(250, 0, 250)); 
-                else Rectangle.setFillColor(Color(180, 252, 20)); 
+                else Rectangle.setFillColor(Color(50, 50, 50)); 
                 
                 Rectangle.setOutlineThickness(2.0f);
                 Rectangle.setOutlineColor(Color(20, 20, 20));
@@ -249,7 +247,16 @@ bool initializeApp() {
 // loop exits when the window is closed or ESC is pressed.
 // ----------------------------------------------------------------------------
 void runApp() {
+    Clock clock;  // Add this - SFML clock for timing
+    float tickInterval = 0.1f;  // 0.5 seconds per tick (2 ticks per second)
+    float timeSinceLastTick = 0.0f;
+    
     while (g_window->isOpen()) {
+        // Calculate delta time
+        float deltaTime = clock.restart().asSeconds();
+        timeSinceLastTick += deltaTime;
+        
+        // Handle events
         Event event;
         while (g_window->pollEvent(event)) {
             if (event.type == Event::Closed) {
@@ -260,12 +267,25 @@ void runApp() {
                     g_window->close();
                 }
             }
-            if (!isSimulationComplete()){ //simulate a tick until all trains reach their destination or collide
-                simulateOneTick();       //and simulate it as long as the window is open the moment it closes this also stops 
-            }
         }
         
-        g_window->clear(Color(50,50,50));
+        // SIMULATION UPDATE - runs based on time, not events
+        if (!isSimulationComplete() && timeSinceLastTick >= tickInterval) {
+            simulateOneTick();
+            timeSinceLastTick = 0.0f;  // Reset timer
+            
+            // Optional: print to console for debugging
+            std::cout << "Tick: " << tick << " | Arrived: " << numArrived 
+                      << " | Crashed: " << numCrashed << std::endl;
+        }
+        
+        if (isSimulationComplete()) {
+            std::cout << "Simulation complete!" << std::endl;
+            g_window->close();
+        }
+        
+        // RENDERING
+        g_window->clear(Color(50, 50, 50));
         printGrid(*g_window);
         g_window->display();
     }
