@@ -228,10 +228,11 @@ bool loadLevelFile(const char* filename) {
     
     // Allocate grid
     grid = new char[rows * cols];
-    for (int k = 0; k < rows * cols; k++) {
-        grid[k] = ' ';
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            grid[i*cols + j] = ' ';
+        }
     }
-    
     // Skip to MAP section
     while (getline(file, line)) {
         if (line == "MAP:")
@@ -242,32 +243,37 @@ bool loadLevelFile(const char* filename) {
     int destCount = 0;
     int tempDestX[10] = {};
     int tempDestY[10] = {};
-    
-    for (int row = 0; row < rows; row++) {
-        if (!getline(file, line)) break;
+    cout << "Starting grid reading" << endl;
+    int i = 2;
+    while (i < rows && getline(file,line)){
+        if (line.empty()){ 
+            cout << "Gyattt ts is empty" << endl;
+            continue;
+        }
+        if (line == "SWITCHES:")    
+            break;
         
-        if (line == "SWITCHES:") break;
-        
-        for (int col = 0; col < cols && col < (int)line.length(); col++) {
-            char tile = line[col];
-            grid[row * cols + col] = tile;
+        for (int j = 0; j < cols; j++) {
+            char tile = line[j];
+            grid[i * cols + j] = tile;
             
             // Store switch positions (exclude S and D)
             if (tile >= 'A' && tile <= 'Z' && tile != 'S' && tile != 'D') {
                 int idx = getSwitchIndex(tile);
                 if (idx != -1) {
-                    switchX[idx] = row;
-                    switchY[idx] = col;
+                    switchX[idx] = j;
+                    switchY[idx] = i;
+                    cout << "Switch " << tile << " at (" << switchX[idx] << "," << switchY[idx] << ")" << endl;
                 }
             }
-            
-            // Store destination positions
+
             if (tile == 'D' && destCount < 10) {
-                tempDestX[destCount] = row;
-                tempDestY[destCount] = col;
+                tempDestX[destCount] = j;
+                tempDestY[destCount] = i;
                 destCount++;
             }
         }
+        i++;
     }
     
     cout << "Found " << destCount << " destinations" << endl;
@@ -314,7 +320,6 @@ bool loadLevelFile(const char* filename) {
         while (valueIndex < 5 && j < (int)line.length()) {
             if (line[j] == ' ') {
                 valueIndex++;
-                j++;
                 j++;
             } else if (line[j] >= '0' && line[j] <= '9') {
                 values[valueIndex] = values[valueIndex] * 10 + (line[j] - '0');

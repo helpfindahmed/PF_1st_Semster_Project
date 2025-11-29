@@ -14,8 +14,8 @@ WEATHER:
 NORMAL
 
 MAP:
-                                                                      
-                                                                      
+
+
   S===A===+===B===+===C===+=======D                                   
           |       |       |       |                                   
           |       |       |       |                                   
@@ -32,8 +32,8 @@ MAP:
           |       |       |       |                                   
           |       |       |       |                                   
           D       D       D       D                                   
-                                                                                                                                       
-                                                                      
+
+
 
 SWITCHES:
 A PER_DIR 0 3 3 3 3 STRAIGHT TURN
