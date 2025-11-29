@@ -59,48 +59,81 @@ void printGrid(RenderWindow& window){
             
             // Try to draw from track texture first (5.png)
             if (hasTrackSprites) {
-                sprite.setTexture(trackTexture);
-                
-                switch(tile) {
-                      // Horizontal track: (44, 63) size 340x142
-                    case '=':  // Safety buffer (also horizontal track visually)
-                        sprite.setTextureRect(IntRect(44, 63, 340, 142));
-                        spriteWidth = 340;
-                        spriteHeight = 142;
-                        drewSprite = true;
-                        break;
-                        
-                    case '|':  // Vertical track: (450, 62) size 138x239
-                        sprite.setTextureRect(IntRect(450, 62, 138, 239));
-                        spriteWidth = 138;
-                        spriteHeight = 239;
-                        drewSprite = true;
-                        break;
-                        
-                    case '/':  // Curve slash: (46, 295) size 315x322
-                        sprite.setTextureRect(IntRect(46, 295, 315, 322));
-                        spriteWidth = 315;
-                        spriteHeight = 322;
-                        drewSprite = true;
-                        break;
-                        
-                    case '\\':  // Curve backslash (flip / horizontally)
-                        sprite.setTextureRect(IntRect(46, 295, 315, 322));
-                        spriteWidth = 315;
-                        spriteHeight = 322;
-                        drewSprite = true;
-                        break;
-                        
-                    case '+':  // Crossing: (362, 666) size 295x314
-                        sprite.setTextureRect(IntRect(362, 666, 295, 314));
-                        spriteWidth = 295;
-                        spriteHeight = 314;
-                        drewSprite = true;
-                        break;
-                }
-                
+    sprite.setTexture(trackTexture);
+
+    // Start of the converted if-else if logic
+    
+    // Case '=' (Safety buffer / Horizontal track)
+    if (tile == '=') {
+        // Horizontal track: (44, 63) size 340x142
+        sprite.setTextureRect(IntRect(44, 63, 340, 142));
+        spriteWidth = 340;
+        spriteHeight = 142;
+        drewSprite = true;
+    } 
+    
+    // Case '|' (Vertical track)
+    // NOTE: I corrected the previous 'case true' error and replaced it with '|'.
+    else if (tile == '|') {
+        // Vertical track: (450, 62) size 138x239
+        sprite.setTextureRect(IntRect(450, 62, 138, 239));
+        spriteWidth = 138;
+        spriteHeight = 239;
+        drewSprite = true;
+    } 
+    
+    // Case '/' (Curve slash)
+    else if (tile == '/') {
+        // Curve slash: (46, 295) size 315x322
+        sprite.setTextureRect(IntRect(46, 295, 315, 322));
+        spriteWidth = 315;
+        spriteHeight = 322;
+        drewSprite = true;
+    } 
+    
+    // Case '\' (Curve backslash)
+    else if (tile == '\\') {
+        // Curve backslash (flip / horizontally): (46, 295) size 315x322
+        sprite.setTextureRect(IntRect(46, 295, 315, 322));
+        spriteWidth = 315;
+        spriteHeight = 322;
+        drewSprite = true;
+    } 
+    
+    // Case '+' (Crossing)
+    else if (tile == '+') {
+        // Crossing: (362, 666) size 295x314
+        sprite.setTextureRect(IntRect(362, 666, 295, 314));
+        spriteWidth = 295;
+        spriteHeight = 314;
+        drewSprite = true;
+    }
+    
+    // End of the converted logic
+    
+    // The drawing/scaling logic that followed your original switch statement 
+    // needs to be moved out here, after the final 'else if'.
+    
+    if (drewSprite) {
+        sprite.setPosition(x, y);
+        
+        // Calculate scale to fit cell size
+        float scaleX = g_cellSize / spriteWidth;
+        float scaleY = g_cellSize / spriteHeight;
+        
+        // Special handling for backslash - flip horizontally
+        if (tile == '\\') {
+            sprite.setScale(-scaleX, scaleY);  // Negative X flips
+            sprite.setPosition(x + g_cellSize, y);  // Adjust for flip
+        } else {
+            sprite.setScale(scaleX, scaleY);
+        }
+        
+        window.draw(sprite);
+    }
+}
             
-            }
+            
             
             // Try to draw from tile texture (3.png) for S, D, and switches
             if (!drewSprite && hasTileSprites) {
@@ -148,13 +181,13 @@ void printGrid(RenderWindow& window){
                 RectangleShape Rectangle(Vector2f(g_cellSize, g_cellSize));
                 Rectangle.setPosition(x, y);
                 
-                if (tile == 'S' || tile == 'D') Rectangle.setFillColor(Color(100, 255, 100));
+                if (tile == 'S' || tile == 'D') Rectangle.setFillColor(Color(100, 0, 100));
                 else if (tile >= 'A' && tile <= 'Z') Rectangle.setFillColor(Color(255, 180, 50));
                 else if (tile == '=') Rectangle.setFillColor(Color(100, 100, 255)); 
-                else if (tile == '+' || tile == '|' || tile == '-' || tile == '/' || tile == '\\') Rectangle.setFillColor(Color(150, 150, 150)); 
-                else Rectangle.setFillColor(Color(50, 50, 50)); 
+                else if (tile == '+' || tile == '|' || tile == '=' ) Rectangle.setFillColor(Color(250, 0, 250)); 
+                else Rectangle.setFillColor(Color(180, 252, 20)); 
                 
-                Rectangle.setOutlineThickness(1.0f);
+                Rectangle.setOutlineThickness(2.0f);
                 Rectangle.setOutlineColor(Color(20, 20, 20));
                 
                 window.draw(Rectangle);
