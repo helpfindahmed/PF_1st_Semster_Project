@@ -133,8 +133,8 @@ bool loadLevelFile(const char* filename) {
             switchK[index][1] = (int)line[14] - 48;
             switchK[index][2] = (int)line[16] - 48;
             switchK[index][3] = (int)line[18] - 48;
-            switchState0[index] = 0;
-            switchState1[index] = 1;
+            switchState0[index] = 1;
+            switchState1[index] = 3;
         } else if (line.length() > 2 && line[2] == 'G') {
             switchMode[index] = 0; // GLOBAL
             switchState[index] = (int)line[9] - 48;
@@ -142,8 +142,8 @@ bool loadLevelFile(const char* filename) {
             switchK[index][1] = (int)line[13] - 48;
             switchK[index][2] = (int)line[15] - 48;
             switchK[index][3] = (int)line[17] - 48;
-            switchState0[index] = 0;
-            switchState1[index] = 1;
+            switchState0[index] = 1;
+            switchState1[index] = 3;
         }
     }
     

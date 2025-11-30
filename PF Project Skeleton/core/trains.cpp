@@ -127,12 +127,9 @@ int getNextDirection(int x , int y , int currentDir) {
     }
     
     if (tile >= 'A' && tile <= 'Z') {
-        int switchIndex = getSwitchIndex(tile);
-        if (switchIndex >= 0 && switchIndex < maxSwitches) {
-            int state = switchState[switchIndex];
-            return state;
-        }
-    }
+    int switchIdx = getSwitchIndex(tile);
+    return getSwitchStateForDirection(switchIdx);
+}
     
     return currentDir;
 }

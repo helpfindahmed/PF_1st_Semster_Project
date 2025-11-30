@@ -124,7 +124,7 @@ void initializeSimulationState() {
     for (int i = 0; i < 26; i++){
         for (int j = 0; j < 4; j++){
             switchK[i][j] = -1;
-            switchEntryCount[i][j] = -1;
+            switchEntryCount[i][j] = 0;
         }
     }
 

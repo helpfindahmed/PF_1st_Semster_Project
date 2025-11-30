@@ -60,9 +60,6 @@ void printGrid(RenderWindow& window){
     sidebar.setPosition(1750, 0);
     sidebar.setFillColor(Color(40, 100, 40));
     window.draw(sidebar);
-
-
-
     int  totalActiveTrains = 0 ;
 
     for (int i = 0; i < maxTrains; i++){
