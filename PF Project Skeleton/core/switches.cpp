@@ -139,7 +139,7 @@ void updateSignalLights() {
                 }
             }
         }
-        if (minDist == 0) {
+        if (minDist == 3) {
             signalColor[i] = 0;  //green when on the signal too
         } 
         else if (minDist == 1) {

@@ -1,7 +1,4 @@
 000000-Simulation Metrics-000000
-Trains Arrived: 8
-Trains Crashed: 2
-Total Ticks: 7
-Trains Arrived: 0
+Total Ticks: 32
+Trains Arrived: 1
 Trains Crashed: 0
-

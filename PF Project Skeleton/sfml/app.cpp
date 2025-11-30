@@ -176,24 +176,42 @@ void printGrid(RenderWindow& window){
                 
                 switch(tile) {
                     case 'S':
-                        sprite.setTextureRect(IntRect(62, 99, 171, 174));
-                        spriteWidth = 171;
-                        spriteHeight = 174;
+                        sprite.setTextureRect(IntRect(51, 74, 113, 112));
+                        spriteWidth = 113;
+                        spriteHeight = 112;
                         drewSprite = true;
                         break;
                     case 'D':
-                        sprite.setTextureRect(IntRect(567, 99, 170, 170));
-                        spriteWidth = 170;
-                        spriteHeight = 170;
+                        sprite.setTextureRect(IntRect(382, 69, 115, 117));
+                        spriteWidth = 115;
+                        spriteHeight = 117;
                         drewSprite = true;
                         break;
                     default:
-                        if (tile >= 'A' && tile <= 'Z') {
-                            sprite.setTextureRect(IntRect(66, 597, 165, 174));
-                            spriteWidth = 165;
-                            spriteHeight = 174;
+
+                    if (tile >= 'A' && tile <= 'Z'&& signalColor[getSwitchIndex(tile)]==2) {
+                            sprite.setTextureRect(IntRect(50, 402, 113, 115));
+                            spriteWidth = 113;
+                            spriteHeight = 115;
                             drewSprite = true;
                         }
+
+                        
+                         else if (tile >= 'A' && tile <= 'Z'&& signalColor[getSwitchIndex(tile)]==1) {
+                            sprite.setTextureRect(IntRect(220, 404, 112, 109));
+                            spriteWidth = 112;
+                            spriteHeight = 109;
+                            drewSprite = true;
+                        }
+                        
+                        
+                   else if (tile >= 'A' && tile <= 'Z' ) {
+                            sprite.setTextureRect(IntRect(382, 399, 115, 117));
+                            spriteWidth = 115;
+                            spriteHeight = 117;
+                            drewSprite = true;
+                        }
+                        
                         break;
                 }
                 
@@ -277,7 +295,7 @@ bool initializeApp() {
     }
     g_window->setFramerateLimit(10);
     trackTexture.loadFromFile("Sprites/5.png");
-    tileTexture.loadFromFile("Sprites/3.png");
+    tileTexture.loadFromFile("Sprites/7.png");
     trainTexture.loadFromFile("Sprites/2.png");
     trainSoundBuffer.loadFromFile("Sprites/train.wav");
     // g_font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
