@@ -300,31 +300,25 @@ bool initializeApp() {
         soundLoaded = true;
     }
     
-        if (!g_backgroundTexture.loadFromFile("Sprites/_.jpeg")) {
+    if (!g_backgroundTexture.loadFromFile("Sprites/_.jpeg")) {
         printf("Warning: Could not load background image!\n");
     } else {
-       printf("SUCCESS: Background image loaded!\n");
-    g_backgroundTexture.setRepeated(true); 
-    g_backgroundSprite.setTexture(g_backgroundTexture);
-    
-    
-    unsigned int requiredWidth = cols * (int)g_cellSize + (int)g_gridOffsetX;
-    unsigned int requiredHeight = rows * (int)g_cellSize + (int)g_gridOffsetY;
-    
-    g_backgroundSprite.setTextureRect(
-        IntRect(0, 0, requiredWidth, requiredHeight) 
-    );
-    
-    
-    g_backgroundSprite.setPosition(0.0f, 0.0f);
-    
-}
-
-
-
-
-
-return true;
+        g_backgroundTexture.setRepeated(true); 
+        g_backgroundSprite.setTexture(g_backgroundTexture);
+        
+        
+        unsigned int requiredWidth = cols * (int)g_cellSize + (int)g_gridOffsetX;
+        unsigned int requiredHeight = rows * (int)g_cellSize + (int)g_gridOffsetY;
+        
+        g_backgroundSprite.setTextureRect(
+            IntRect(0, 0, requiredWidth, requiredHeight) 
+        );
+        
+        
+        g_backgroundSprite.setPosition(0.0f, 0.0f);
+        
+    }
+    return true;
 }
 
 // ----------------------------------------------------------------------------

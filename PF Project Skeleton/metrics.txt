@@ -1,4 +1,3 @@
 000000-Simulation Metrics-000000
-Total Ticks: 75
 Trains Arrived: 8
 Trains Crashed: 2
