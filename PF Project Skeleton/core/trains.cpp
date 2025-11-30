@@ -36,14 +36,8 @@ void spawnTrainsForTick() {
             }
         }
     }
-    //calculate how many trains so that we can output onto SFML grid
-    for (int i = 0; i < maxTrains; i++){
-        if (trainActive[i] == 1){
-            totalActiveTrains++;
-        }
-    }
 }
-// ----------------------------------------------------------------------------
+// ---------------------toggle-------------------------------------------------------
 // DETERMINE NEXT POSITION for a train
 // ----------------------------------------------------------------------------
 // Compute next position/direction from current tile and rules.
@@ -183,7 +177,13 @@ int getSmartDirectionAtCrossing(int trainIndex) {
 void determineAllRoutes() {
     for (int i = 0; i < maxTrains; i++) {
         if (trainActive[i] == 1) {
-           determineNextPosition(i);
+            if (trainDelay[i] > 0){
+                plannedX[i] = trainX[i];
+                plannedY[i] = trainY[i];
+                plannedDirection[i] = trainDirection[i];
+                continue; 
+            }
+            determineNextPosition(i);
         }
     }
 }
@@ -191,22 +191,25 @@ void determineAllRoutes() {
 void moveAllTrains() {
     for (int i = 0; i < maxTrains; i++) {
         if (trainActive[i] == 1) {
-            if (weatherCondition == 1) { 
-                if ((rand() % 100) < 10) {
-                    trainDelay[i] += 1;
-                }
-            }
+            if (trainDelay[i] > 0)
+                trainDelay[i]--;
             trainprevX[i] = trainX[i];
             trainprevY[i] = trainY[i];
-        }
-    }
-    
-    // Move all trains to their planned positions
-    for (int i = 0; i < maxTrains; i++) {
-        if (trainActive[i] == 1) {
+
             trainX[i] = plannedX[i];
             trainY[i] = plannedY[i];
             trainDirection[i] = plannedDirection[i];
+
+
+            if (weatherCondition == 1) { 
+                if ((rand() % 100) < 10) {
+                    trainDelay[i] = 1;
+                }
+            }
+
+            if (grid[trainY[i]*cols + trainX[i]] == '-'){
+                trainDelay[i] = 1;
+            }
         }
     }
 }
