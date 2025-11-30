@@ -19,6 +19,7 @@ Tick,Switch,Mode,State
 0,R,PER_DIR,1
 0,S,GLOBAL,1
 0,T,PER_DIR,1
+
 1,A,PER_DIR,1
 1,B,PER_DIR,1
 1,C,PER_DIR,1
@@ -1499,3 +1500,4 @@ Tick,Switch,Mode,State
 74,R,PER_DIR,1
 74,S,GLOBAL,1
 74,T,PER_DIR,1
+

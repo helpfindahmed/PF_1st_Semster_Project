@@ -25,27 +25,6 @@ int plannedDirection[10] = {};
 // ----------------------------------------------------------------------------
 // Activate trains scheduled for this tick.
 // ----------------------------------------------------------------------------
-
-
-
-// void spawnTrainsForTick() {
-//     for (int i = 0 ; i < maxTrains ; i++)
-//     {
-//         if(trainActive[i]==0)
-//         {
-//             if(trainSpawnTick[i]== tick )
-//             {
-//                 trainActive[i]=1;
-//                 trainprevX[i] = trainX[i];
-//                 trainprevY[i] = trainY[i];
-//             }
-//         }
-//     }
-
-    
-// }
-
-
 void spawnTrainsForTick() {
     for (int i = 0; i < maxTrains; i++) {
         if (trainActive[i] == 0) {  // Train not yet active
@@ -54,10 +33,13 @@ void spawnTrainsForTick() {
                 // Initialize previous position to current position
                 trainprevX[i] = trainX[i];
                 trainprevY[i] = trainY[i];
-                
-                // ADD DEBUG:
-                std::cout << "*** SPAWNING Train " << i << " at tick " << tick << std::endl;
             }
+        }
+    }
+    //calculate how many trains so that we can output onto SFML grid
+    for (int i = 0; i < maxTrains; i++){
+        if (trainActive[i] == 1){
+            totalActiveTrains++;
         }
     }
 }
@@ -66,139 +48,47 @@ void spawnTrainsForTick() {
 // ----------------------------------------------------------------------------
 // Compute next position/direction from current tile and rules.
 // ----------------------------------------------------------------------------
-
-
-
-
-// bool determineNextPosition(int trainIndex) {
-//     int currentX = trainX[trainIndex];
-//     int currentY = trainY[trainIndex];
-//     int currentDir = trainDirection[trainIndex];
-    
-//     std::cout << "DEBUG determineNextPosition: Train " << trainIndex 
-//               << " at (" << currentX << "," << currentY << ")" << std::endl;
-    
-//     // Calculate next position based on current direction
-//     int nextX = currentX;
-//     int nextY = currentY;
-    
-//     if (currentDir == Dirnorth) nextX--;
-//     else if (currentDir == Dirsouth) nextX++;
-//     else if (currentDir == Dirwest) nextY--;
-//     else if (currentDir == Direast) nextY++;
-    
-//     std::cout << "DEBUG: Next position would be (" << nextX << "," << nextY << ")" << std::endl;
-    
-    // // Check if next position is a valid track tile using the grid function
-    // if (!isTrackTile(nextX, nextY)) {
-    //     std::cout << "DEBUG: Invalid track at (" << nextX << "," << nextY << ")" << std::endl;
-    //     // Invalid tile or out of bounds - train crashes
-    //     trainActive[trainIndex] = 0;
-    //     numCrashed++;
-    //     std::cout << "Train " << trainIndex << " crashed at (" << nextX << "," << nextY << ")" << std::endl;
-    //     return false;
-    // }
-    // // Get the tile at next position
-    // char nextTile = grid[nextX * cols + nextY];
-    // int newDir = currentDir;
-    // if (nextTile == '+') {
-    //     newDir = getSmartDirectionAtCrossing(trainIndex);
-    // } 
-    
-    // else if (nextTile == '/' || nextTile == '\\') {
-    //     newDir = getNextDirection(nextX, nextY, currentDir);
-    // }
-    
-    // else if (nextTile >= 'A' && nextTile <= 'Z') {
-    //     newDir = getNextDirection(nextX, nextY, currentDir);
-    // }
-    
-    // else if (nextTile == '-' || nextTile == '|' || nextTile == '=') {
-    //     newDir = getNextDirection(nextX, nextY, currentDir);
-    // }
-
-    // else if (nextTile == 'S' || nextTile == 'D') {
-    //     newDir = currentDir;
-    // }
-    // // Store planned position
-
-    // plannedX[trainIndex] = nextX;
-    // plannedY[trainIndex] = nextY;
-    // plannedDirection[trainIndex] = newDir;
-    
-    // return true;
-  
-// }
-
-
 bool determineNextPosition(int trainIndex) {
     int currentX = trainX[trainIndex];
     int currentY = trainY[trainIndex];
     int currentDir = trainDirection[trainIndex];
     
-int newDir = currentDir;
-    // FIRST: Check if current tile is a crossing and update direction
-    char currentTile = grid[currentY * cols + currentX];
-    if (currentTile == '+') {
-        currentDir = getSmartDirectionAtCrossing(trainIndex);
-        // Debug
-        if (tick < 30) {
-            std::cout << "Train " << trainIndex << " at crossing (" << currentX << "," << currentY 
-                     << ") chose direction " << currentDir << std::endl;
-        }
-    }
-
-
-    // Debug for first train in first few ticks
-    if (trainIndex == 0 && tick < 5) {
-        std::cout << "  Train 0: current=(" << currentX << "," << currentY 
-                  << ") dir=" << currentDir;
-    }
-    
-    // Calculate next position based on current direction
+    int newDir = currentDir;
     int nextX = currentX;
     int nextY = currentY;
-    
-    if (currentDir == Dirnorth) nextY--;
-    else if (currentDir == Dirsouth) nextY++;
-    else if (currentDir == Dirwest) nextX--;
-    else if (currentDir == Direast) nextX++;
-    
-    if (trainIndex == 0 && tick < 5) {
-        std::cout << " -> next=(" << nextX << "," << nextY << ")" << std::endl;
-    }
-    
-        // Check if next position is a valid track tile using the grid function
-    if (!isTrackTile(nextX, nextY)) {
-        std::cout << "DEBUG: Invalid track at (" << nextX << "," << nextY << ")" << std::endl;
-        // Invalid tile or out of bounds - train crashes
-        trainActive[trainIndex] = 0;
-        numCrashed++;
-        std::cout << "Train " << trainIndex << " crashed at (" << nextX << "," << nextY << ")" << std::endl;
-        return false;
-    }
-    // Get the tile at next position
-    char nextTile = grid[nextY * cols + nextX];
+    char currentTile = grid[currentY * cols + currentX];
 
+    //Check if current tile is a crossing and update direction
+    if (currentTile == '+') {
+        newDir = getSmartDirectionAtCrossing(trainIndex);
+    }
     
-   
-    
-    if (nextTile == '/' || nextTile == '\\') {
+    if (currentTile == '/' || currentTile == '\\') {
         newDir = getNextDirection(nextX, nextY, currentDir);
     }
     
-    else if (nextTile >= 'A' && nextTile <= 'Z') {
+    else if (currentTile >= 'A' && currentTile <= 'Z' && currentTile != 'S' && currentTile != 'D') {
         newDir = getNextDirection(nextX, nextY, currentDir);
     }
     
-    else if (nextTile == '-' || nextTile == '|' || nextTile == '=') {
+    else if (currentTile == '-' || currentTile == '|' || currentTile == '=') {
         newDir = getNextDirection(nextX, nextY, currentDir);
     }
 
-    else if (nextTile == 'S' || nextTile == 'D') {
+    else if (currentTile == 'S' || currentTile == 'D') {
         newDir = currentDir;
     }
     // Store planned position
+
+    if (newDir == Dirnorth) nextY--;
+    else if (newDir == Dirsouth) nextY++;
+    else if (newDir == Dirwest) nextX--;
+    else if (newDir == Direast) nextX++;
+
+    if (!isTrackTile(nextX, nextY)) {
+        trainActive[trainIndex] = 0;
+        numCrashed++;
+    }
 
     plannedX[trainIndex] = nextX;
     plannedY[trainIndex] = nextY;
@@ -290,80 +180,30 @@ int getSmartDirectionAtCrossing(int trainIndex) {
 // ----------------------------------------------------------------------------
 // Fill next positions/directions for all trains.
 // ----------------------------------------------------------------------------
-
-
-
-// void determineAllRoutes() {
-//     for (int i = 0; i < maxTrains; i++) {
-//         if (trainActive[i] == 1) {
-//             determineNextPosition(i);
-//         }
-//     }
-// }
-
-// // ----------------------------------------------------------------------------
-// // MOVE ALL TRAINS (PHASE 5)
-// // ----------------------------------------------------------------------------
-// // Move trains; resolve collisions and apply effects.
-// // ----------------------------------------------------------------------------
-// void moveAllTrains() {
-//      for (int i = 0; i < maxTrains; i++) {
-//         if (trainActive[i] == 1) {
-//             trainprevX[i] = trainX[i];
-//             trainprevY[i] = trainY[i];
-//         }
-//     }
-    
-//     // Move all trains to their planned positions
-//     for (int i = 0; i < maxTrains; i++) {
-//         if (trainActive[i] == 1) {
-//             trainX[i] = plannedX[i];
-//             trainY[i] = plannedY[i];
-//             trainDirection[i] = plannedDirection[i];
-//         }
-//     }
-// }
-
-
 void determineAllRoutes() {
-    if (tick < 3) {
-        std::cout << "  determineAllRoutes() called" << std::endl;
-    }
-    
     for (int i = 0; i < maxTrains; i++) {
         if (trainActive[i] == 1) {
-            bool success = determineNextPosition(i);
-            if (tick < 3) {
-                std::cout << "    Train " << i << " route: " << (success ? "OK" : "FAILED") 
-                         << " planned=(" << plannedX[i] << "," << plannedY[i] << ")" << std::endl;
-            }
+           determineNextPosition(i);
         }
     }
 }
 
 void moveAllTrains() {
-    if (tick < 3) {
-        std::cout << "  moveAllTrains() called" << std::endl;
-    }
-    
-    // Store previous positions
     for (int i = 0; i < maxTrains; i++) {
         if (trainActive[i] == 1) {
+            if (weatherCondition == 1) { 
+                if ((rand() % 100) < 10) {
+                    trainDelay[i] += 1;
+                }
+            }
             trainprevX[i] = trainX[i];
             trainprevY[i] = trainY[i];
-            if (tick < 3) {
-                std::cout << "    Train " << i << " prev saved: (" << trainprevX[i] << "," << trainprevY[i] << ")" << std::endl;
-            }
         }
     }
     
     // Move all trains to their planned positions
     for (int i = 0; i < maxTrains; i++) {
         if (trainActive[i] == 1) {
-            if (tick < 3) {
-                std::cout << "    Train " << i << " moving from (" << trainX[i] << "," << trainY[i] 
-                         << ") to (" << plannedX[i] << "," << plannedY[i] << ")" << std::endl;
-            }
             trainX[i] = plannedX[i];
             trainY[i] = plannedY[i];
             trainDirection[i] = plannedDirection[i];
@@ -382,11 +222,12 @@ void detectCollisions() {
     
     
     for (int i = 0; i < maxTrains; i++) {
-        if (trainActive[i] == 0 || crashed[i]) continue;
+        if (trainActive[i] == 0 || crashed[i]) 
+            continue;
         
         for (int j = i + 1; j < maxTrains; j++) {
-            if (trainActive[j] == 0 || crashed[j]) continue;
-            
+            if (trainActive[j] == 0 || crashed[j]) 
+                continue;
             
             if (plannedX[i] == plannedX[j] && plannedY[i] == plannedY[j]) {
                 // Calculate Manhattan distance for train i
@@ -409,14 +250,11 @@ void detectCollisions() {
                 } else if (distJ > distI) {
                     
                     waiting[i] = true;
-                } else {
-                    
+                } else { 
                     crashed[i] = true;
                     crashed[j] = true;
                 }
             }
-            
-           
             if (plannedX[i] == trainX[j] && plannedY[i] == trainY[j] &&
                 plannedX[j] == trainX[i] && plannedY[j] == trainY[i]) {
                 // Calculate Manhattan distance for train i
@@ -440,7 +278,7 @@ void detectCollisions() {
                     
                     waiting[i] = true;
                 } else {
-                  
+
                     crashed[i] = true;
                     crashed[j] = true;
                 }
@@ -470,22 +308,6 @@ void detectCollisions() {
 // ----------------------------------------------------------------------------
 // Mark trains that reached destinations.
 // ----------------------------------------------------------------------------
-
-
-
-// void checkArrivals() {
-//     for (int i = 0; i < maxTrains; i++) {
-//         if (trainActive[i] == 1) {
-//             // Check if train reached its SPECIFIC destination
-//             if (trainX[i] == destX[i] && trainY[i] == destY[i]) {
-//                 trainActive[i] = 0;
-//                 numArrived++;
-//             }
-//         }
-//     }
-// }
-
-
 void checkArrivals() {
     for (int i = 0; i < maxTrains; i++) {
         if (trainActive[i] == 1) {
@@ -493,14 +315,6 @@ void checkArrivals() {
             if (trainX[i] == destX[i] && trainY[i] == destY[i]) {
                 trainActive[i] = 0;
                 numArrived++;
-                std::cout << "*** Train " << i << " ARRIVED at destination (" 
-                         << destX[i] << "," << destY[i] << ")! ***" << std::endl;
-            }
-            
-            // Debug: Show distance to destination for first few ticks
-            if (tick < 5) {
-                std::cout << "  Train " << i << " at (" << trainX[i] << "," << trainY[i] 
-                         << ") -> dest (" << destX[i] << "," << destY[i] << ")" << std::endl;
             }
         }
     }

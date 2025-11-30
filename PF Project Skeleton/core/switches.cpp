@@ -112,8 +112,47 @@ void applyDeferredFlips() {
 // Update signal colors for switches.
 // ----------------------------------------------------------------------------
 void updateSignalLights() {
-}
+    for (int i = 0; i < maxSwitches; i++) {
+        signalColor[i] = 0; //make all green 
 
+        if (switchX[i] == -1) //switch DNE
+            continue;
+
+        int minDist = 1000;
+
+        // Find the nearest ACTIVE train and then calculate 
+        for (int a = 0; a < maxTrains; a++) {
+            if (trainActive[a]) {
+
+                int dx = trainX[a] - switchX[i];
+                if (dx < 0) 
+                    dx = -dx; 
+
+                int dy = trainY[a] - switchY[i];
+                if (dy < 0) 
+                    dy = -dy; 
+                
+                int dist = dx + dy;
+
+                if (dist < minDist) {
+                    minDist = dist;
+                }
+            }
+        }
+        if (minDist == 0) {
+            signalColor[i] = 0;  //green when on the signal too
+        } 
+        else if (minDist == 1) {
+            signalColor[i] = 2;  //red
+        } 
+        else if (minDist == 2) {
+            signalColor[i] = 1;  //yellow
+        }  
+        else {
+            signalColor[i] = 0;  //green
+        }
+    }
+}
 // ----------------------------------------------------------------------------
 // TOGGLE SWITCH STATE (Manual)
 // ----------------------------------------------------------------------------

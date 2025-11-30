@@ -22,8 +22,8 @@ bool isTrackTile(int x, int y) {
     if (!isInBounds(x, y)) {
         return false;
     }
+    
     char tile = grid[(y * cols) + x];
-    std::cout << tile << std::endl;
     return (tile == '-' || tile == '|' || tile == '+' || tile == '/' || tile == '\\' || tile == '='
             || tile == 'S' || tile == 'D' || (tile >= 'A' && tile <= 'Z'));
 }

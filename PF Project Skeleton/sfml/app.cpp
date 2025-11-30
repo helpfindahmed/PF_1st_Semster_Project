@@ -40,7 +40,7 @@ static float g_gridOffsetY = 50.0f;
 
 static Texture trackTexture;      // 5.png - tracks
 static Texture tileTexture;        // 3.png - switches
-static Texture trainTexture;       // NEW: For trains
+static Texture trainTexture;       //For trains
 
 static SoundBuffer trainSoundBuffer;
 static Sound trainSound;
@@ -141,6 +141,7 @@ void printGrid(RenderWindow& window){
                     window.draw(sprite);
                 }
             }
+
             
           if (!drewSprite) {
     
@@ -162,6 +163,7 @@ void printGrid(RenderWindow& window){
     } 
     
 }
+
         }
     }
     
@@ -210,33 +212,16 @@ bool initializeApp() {
         return false;
     }
     g_window->setFramerateLimit(10);
-    
+    trackTexture.loadFromFile("Sprites/5.png");
+    tileTexture.loadFromFile("Sprites/3.png");
+    trainTexture.loadFromFile("Sprites/2.png");
+    trainSoundBuffer.loadFromFile("Sprites/train.wav");
+
     printf("Loading sprites...\n");
     
-    if (!trackTexture.loadFromFile("Sprites/5.png")) {
-        printf("Warning: Could not load 5.png - using colored rectangles\n");
-    } else {
-        printf("SUCCESS: 5.png loaded!\n");
-    }
-    
-    if (!tileTexture.loadFromFile("Sprites/3.png")) {
-        printf("Warning: Could not load 3.png\n");
-    } else {
-        printf("SUCCESS: 3.png loaded!\n");
-    }
-    
-    // Load train sprites
-    if (!trainTexture.loadFromFile("Sprites/2.png")) {
-        printf("Warning: Could not load 1.png - using colored circles\n");
-    } else {
-        printf("SUCCESS: 2.png loaded!\n");
-    }
-    
      if (!trainSoundBuffer.loadFromFile("Sprites/train.wav")) {
-        printf("Warning: Could not load train.wav - no train sounds\n");
         soundLoaded = false;
     } else {
-        printf("SUCCESS: Train sound loaded!\n");
         trainSound.setBuffer(trainSoundBuffer);
         trainSound.setLoop(true);
         trainSound.setVolume(30);
@@ -282,23 +267,19 @@ return true;
 // loop exits when the window is closed or ESC is pressed.
 // ----------------------------------------------------------------------------
 void runApp() {
-
-      if (soundLoaded) {
+    if (soundLoaded) {
         trainSound.play();
     }
     
-    Clock clock;  // Add this - SFML clock for timing
-    float tickInterval = 0.5f;  // 0.5 seconds per tick (2 ticks per second)
+    Clock clock; 
+    float tickInterval = 0.5f; 
     float timeSinceLastTick = 0.0f;
 
-
-    
     while (g_window->isOpen()) {
         // Calculate delta time
         float deltaTime = clock.restart().asSeconds();
         timeSinceLastTick += deltaTime;
-        
-        // Handle events
+
         Event event;
         while (g_window->pollEvent(event)) {
             if (event.type == Event::Closed) {
@@ -308,20 +289,20 @@ void runApp() {
                 if (event.key.code == Keyboard::Escape) {
                     g_window->close();
                 }
+                if (event.key.code == Keyboard::Space) {
+                        g_isPaused = !g_isPaused;
+                }
+                if (event.key.code == Keyboard::Period) {
+                    if (g_isPaused && !isSimulationComplete()) {
+                        simulateOneTick();
+                    }
+                }
             }
         }
-        
-        // SIMULATION UPDATE - runs based on time, not events
-        if (!isSimulationComplete() && timeSinceLastTick >= tickInterval) {
+
+        if (!g_isPaused && !isSimulationComplete() && timeSinceLastTick >= tickInterval) {
             simulateOneTick();
             timeSinceLastTick = 0.0f;  // Reset timer
-                
-
-
-            
-            // Optional: print to console for debugging
-            std::cout << "Tick: " << tick << " | Arrived: " << numArrived 
-                      << " | Crashed: " << numCrashed << std::endl;
         }
 
         if (isSimulationComplete()) {
@@ -331,11 +312,9 @@ void runApp() {
             std::cout << "Simulation complete!" << std::endl;
             g_window->close();
         }
-       
         
-       
+
         
-        // RENDERING
         g_window->clear(Color(50, 50, 50));
 
         if (g_backgroundTexture.getSize().x > 0) {

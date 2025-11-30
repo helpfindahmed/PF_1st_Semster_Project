@@ -24,6 +24,8 @@ int trainActive[10] = {}; //can only be 0 or 1
 int trainColor[10] = {};
 int trainprevX[10] = {};
 int trainprevY[10] = {};
+int trainDelay[10] = {};
+int totalActiveTrains = 0;
 // ----------------------------------------------------------------------------
 // SWITCHES
 // ----------------------------------------------------------------------------
@@ -32,7 +34,7 @@ int switchIndex[26] = {}; //get from the getSwitchIndex()
 int switchMode[26] = {}; //  0 = GLOBAL, 2 = PER_DIR
 int switchState[26] = {}; 
 int switchEntryCount [26][4];
-
+int signalColor[26] = {}; //0 = GREEN, 1 = YELLOW, 2 = RED
 // int switchUp[26] = {};
 // int switchRight[26] = {};
 // int switchDown[26] = {};
@@ -77,16 +79,16 @@ bool isEmergencyHalt = false;
 // ----------------------------------------------------------------------------
 // Called before loading a new level.
 // ----------------------------------------------------------------------------
-
+int weatherCondition = 0;
 void initializeSimulationState() {
     rows = -1;
- 
     cols = -1;
     tick = 0;
     numArrived = 0;
     numCrashed = 0;
     isEmergencyHalt = false;
-
+    weatherCondition = 0;
+    totalActiveTrains = 0;
     for (int i = 0; i < 10; ++i) {
         trainSpawnTick[i] = -1;
         trainX[i] = -1;
@@ -95,6 +97,7 @@ void initializeSimulationState() {
         trainprevY[i] = -1;
         trainDirection[i] = -1;
         trainActive[i] = 0;
+        trainDelay[i] = 0;
         spawnX[i] = -1;
         spawnY[i] = -1;
         destX[i] = -1;
@@ -114,6 +117,7 @@ void initializeSimulationState() {
         switchState0[i] = -1;
         switchState1[i] = -1;
         switchFlipQueued[i] = -1;
+        signalColor[i] = -1;
        
     }
 
