@@ -26,7 +26,7 @@ extern int maxTrains;
 // ----------------------------------------------------------------------------
 // WEATHER CONSTANTS
 // ----------------------------------------------------------------------------
-
+extern int weatherCondition; // 0=Normal, 1=Rain, 2=Fog
 
 // ----------------------------------------------------------------------------
 // SIGNAL CONSTANTS
@@ -54,7 +54,8 @@ extern int trainActive[10];
 extern int trainColor[10];
 extern int trainprevX[10];
 extern int trainprevY[10];
-
+extern int trainDelay[10];
+extern int totalActiveTrains;
 // ----------------------------------------------------------------------------
 // GLOBAL STATE: SWITCHES (A-Z mapped to 0-25)
 // ----------------------------------------------------------------------------
@@ -64,6 +65,7 @@ extern int switchIndex[26];
 extern int switchMode[26];
 extern int switchState[26];
 extern int switchEntryCount [26][4];
+extern int signalColor[26];
 
 // extern int switchUp[20];
 // extern int switchRight[20];
