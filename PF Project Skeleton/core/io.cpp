@@ -278,12 +278,11 @@ void logSwitchState(int switchIndex) {
 void logSignalState(int switchIndex , char signalcolor) {
 
     ofstream signals_log("signals.csv", ios::app); 
-    // 3. WRITING: Write the data if the file is open
     if (!signals_log.is_open()) {
         cout << "Error:File not opened successfully!" << endl;
         return;
     }else {
-        signals_log << tick << "," << switchIndex << "," << signalcolor << "\n";
+        signals_log << tick << "," << (char)(switchIndex + 'A') << "," << signalcolor << "\n";
         signals_log.close();
     }
     

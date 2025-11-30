@@ -35,7 +35,8 @@ void simulateOneTick() {
     // Phase 5: 
     detectCollisions();
     moveAllTrains();
-    applyDeferredFlips();      
+    applyDeferredFlips();
+    updateSignalLights();      
     // Phase 6: 
     checkArrivals();
     // Phase 7:        
@@ -48,6 +49,17 @@ void simulateOneTick() {
     for (int i = 0; i < 26; i++){
         if (switchMode[i] != -1)
             logSwitchState(i);  
+    }
+
+    for (int i = 0; i < 26; i++){
+        if (switchMode[i] != -1){
+            if (signalColor[i] == 0)
+                logSignalState(switchIndex[i], 'G');
+            else if (signalColor[i] == 1)
+                logSignalState(switchIndex[i], 'Y');
+            else if (signalColor[i] == 2)
+                logSignalState(switchIndex[i], 'R');
+        }
     }
     tick++;
 }
