@@ -4,7 +4,7 @@
 
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -g
-SFML_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+SFML_FLAGS =  -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 # Source files
 CORE_SRCS = core/simulation_state.cpp core/grid.cpp core/trains.cpp \

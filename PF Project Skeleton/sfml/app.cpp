@@ -5,6 +5,7 @@
 #include "../core/switches.h"
 #include "../core/io.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <cmath>
 #include <cstdio>
 #include <iostream>
@@ -41,26 +42,30 @@ static Texture trackTexture;      // 5.png - tracks
 static Texture tileTexture;        // 3.png - switches
 static Texture trainTexture;       // NEW: For trains
 
+static SoundBuffer trainSoundBuffer;
+static Sound trainSound;
+static bool soundLoaded = false;
+
 void printGrid(RenderWindow& window){
     bool hasTrackSprites = (trackTexture.getSize().x > 0);
     bool hasTileSprites = (tileTexture.getSize().x > 0);
     bool hasTrainSprites = (trainTexture.getSize().x > 0);
     
-    // First, draw all the track tiles (your existing code)
+    
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
             float x = g_gridOffsetX + (j * g_cellSize);
             float y = g_gridOffsetY + (i * g_cellSize);
             char tile = grid[i * cols + j];
             
-            // ... all your existing tile drawing code ...
+           
             
             Sprite sprite;
             bool drewSprite = false;
             float spriteWidth = 0;
             float spriteHeight = 0;
             
-            // [Keep all your existing track and tile drawing code here]
+            
             if (hasTrackSprites) {
                 sprite.setTexture(trackTexture);
                 
@@ -76,18 +81,7 @@ void printGrid(RenderWindow& window){
                     spriteHeight = 239;
                     drewSprite = true;
                 } 
-                else if (tile == '/') {
-                    sprite.setTextureRect(IntRect(46, 295, 315, 322));
-                    spriteWidth = 315;
-                    spriteHeight = 322;
-                    drewSprite = true;
-                } 
-                else if (tile == '\\') {
-                    sprite.setTextureRect(IntRect(46, 295, 315, 322));
-                    spriteWidth = 315;
-                    spriteHeight = 322;
-                    drewSprite = true;
-                } 
+               
                 else if (tile == '+') {
                     sprite.setTextureRect(IntRect(362, 666, 295, 314));
                     spriteWidth = 295;
@@ -162,54 +156,26 @@ void printGrid(RenderWindow& window){
         }
     }
     
-    // NOW draw trains ON TOP of the tracks
-    for (int i = 0; i < maxTrains; i++) {
+    
+  for (int i = 0; i < maxTrains; i++) {
         if (trainActive[i] == 1) {
-            int trainCol = trainX[i];  // X = column
-            int trainRow = trainY[i];  // Y = row
-            
+            int trainCol = trainX[i];  
+            int trainRow = trainY[i];              
             float x = g_gridOffsetX + (trainCol * g_cellSize);
-            float y = g_gridOffsetY + (trainRow * g_cellSize);
-            
+            float y = g_gridOffsetY + (trainRow * g_cellSize);            
             if (hasTrainSprites) {
-                // Use train sprite from 1.png
-                Sprite trainSprite;
+                 Sprite trainSprite;
                 trainSprite.setTexture(trainTexture);
                 
-                // Train sprite coordinates (adjust these based on your sprite sheet)
-                trainSprite.setTextureRect(IntRect(0, 0, 64, 64));  // Adjust based on actual sprite
+                trainSprite.setTextureRect(IntRect(113, 138, 372, 242));
                 
-                // Scale to fit cell
-                float scale = g_cellSize / 64.0f;
-                trainSprite.setScale(scale, scale);
+                 float scaleX = g_cellSize / 372.0f;
+                float scaleY = g_cellSize / 242.0f;
+                trainSprite.setScale(scaleX, scaleY);
                 trainSprite.setPosition(x, y);
                 
-                // Color the train based on trainColor
-                Color trainColors[] = {
-                    Color::Red, Color::Blue, Color::Green, Color::Yellow, Color::Magenta,
-                    Color::Cyan, Color(255, 128, 0), Color(128, 0, 255), Color(255, 0, 128), Color(0, 255, 128)
-                };
-                trainSprite.setColor(trainColors[trainColor[i] % 10]);
-                
                 window.draw(trainSprite);
-            } else {
-                // Fallback: colored circles
-                CircleShape trainCircle(g_cellSize * 0.3f);
-                trainCircle.setPosition(x + g_cellSize * 0.2f, y + g_cellSize * 0.2f);
-                
-                Color trainColors[] = {
-                    Color::Red, Color::Blue, Color::Green, Color::Yellow, Color::Magenta,
-                    Color::Cyan, Color(255, 128, 0), Color(128, 0, 255), Color(255, 0, 128), Color(0, 255, 128)
-                };
-                trainCircle.setFillColor(trainColors[trainColor[i] % 10]);
-                trainCircle.setOutlineThickness(2.0f);
-                trainCircle.setOutlineColor(Color::White);
-                
-                window.draw(trainCircle);
-            }
-            
-            // Optional: Draw train ID number
-            // (You'd need to load a font for this)
+            } 
         }
     }
 }
@@ -251,10 +217,21 @@ bool initializeApp() {
     }
     
     // Load train sprites
-    if (!trainTexture.loadFromFile("Sprites/1.png")) {
+    if (!trainTexture.loadFromFile("Sprites/2.png")) {
         printf("Warning: Could not load 1.png - using colored circles\n");
     } else {
-        printf("SUCCESS: 1.png loaded!\n");
+        printf("SUCCESS: 2.png loaded!\n");
+    }
+    
+     if (!trainSoundBuffer.loadFromFile("Sprites/train.wav")) {
+        printf("Warning: Could not load train.wav - no train sounds\n");
+        soundLoaded = false;
+    } else {
+        printf("SUCCESS: Train sound loaded!\n");
+        trainSound.setBuffer(trainSoundBuffer);
+        trainSound.setLoop(true);
+        trainSound.setVolume(30);
+        soundLoaded = true;
     }
     
     return true;
@@ -272,9 +249,16 @@ bool initializeApp() {
 // loop exits when the window is closed or ESC is pressed.
 // ----------------------------------------------------------------------------
 void runApp() {
+
+      if (soundLoaded) {
+        trainSound.play();
+    }
+    
     Clock clock;  // Add this - SFML clock for timing
     float tickInterval = 0.5f;  // 0.5 seconds per tick (2 ticks per second)
     float timeSinceLastTick = 0.0f;
+
+
     
     while (g_window->isOpen()) {
         // Calculate delta time
@@ -298,11 +282,23 @@ void runApp() {
         if (!isSimulationComplete() && timeSinceLastTick >= tickInterval) {
             simulateOneTick();
             timeSinceLastTick = 0.0f;  // Reset timer
+                
+
+
             
             // Optional: print to console for debugging
             std::cout << "Tick: " << tick << " | Arrived: " << numArrived 
                       << " | Crashed: " << numCrashed << std::endl;
         }
+
+        if (isSimulationComplete()) {
+            if (soundLoaded && trainSound.getStatus() == sf::Sound::Playing) {
+                trainSound.stop();
+            }
+            std::cout << "Simulation complete!" << std::endl;
+            g_window->close();
+        }
+       
         
         if (isSimulationComplete()) {
             std::cout << "Simulation complete!" << std::endl;
@@ -315,6 +311,7 @@ void runApp() {
         g_window->display();
     }
 }
+
 
 // ----------------------------------------------------------------------------
 // CLEANUP
