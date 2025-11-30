@@ -277,6 +277,9 @@ bool loadLevelFile(const char* filename) {
     }
     
     cout << "Found " << destCount << " destinations" << endl;
+    for (int d = 0; d < destCount; d++) {
+        cout << "  Dest " << d << ": column=" << tempDestX[d] << ", row=" << tempDestY[d] << endl;
+    }
     
     // Read SWITCHES section
     while (getline(file, line)) {
