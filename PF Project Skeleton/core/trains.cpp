@@ -36,12 +36,7 @@ void spawnTrainsForTick() {
             }
         }
     }
-    //calculate how many trains so that we can output onto SFML grid
-    for (int i = 0; i < maxTrains; i++){
-        if (trainActive[i] == 1){
-            totalActiveTrains++;
-        }
-    }
+   
 }
 // ----------------------------------------------------------------------------
 // DETERMINE NEXT POSITION for a train

@@ -9,8 +9,10 @@
 #include <cmath>
 #include <cstdio>
 #include <iostream>
+#include <string>
 
 using namespace sf;
+using namespace std;
 // ============================================================================
 // APP.CPP - Implementation of SFML application (NO CLASSES)
 // ============================================================================
@@ -20,6 +22,7 @@ using namespace sf;
 // ----------------------------------------------------------------------------
 static RenderWindow* g_window = nullptr;
 static Font g_font;
+static bool fontLoaded = false;
 
 // View for camera (panning/zoom)
 static View g_camera;
@@ -37,6 +40,7 @@ static int g_lastMouseY = 0;
 static float g_cellSize = 32.0f;
 static float g_gridOffsetX = 50.0f;
 static float g_gridOffsetY = 50.0f;
+static float g_sidebarWidth = 200.0f;
 
 static Texture trackTexture;      // 5.png - tracks
 static Texture tileTexture;        // 3.png - switches
@@ -50,6 +54,66 @@ static Texture g_backgroundTexture;
 static Sprite g_backgroundSprite;
 
 void printGrid(RenderWindow& window){
+
+
+    RectangleShape sidebar(Vector2f(g_sidebarWidth, window.getSize().y));
+    sidebar.setPosition(1750, 0);
+    sidebar.setFillColor(Color(40, 100, 40));
+    window.draw(sidebar);
+
+
+
+    int  totalActiveTrains = 0 ;
+
+    for (int i = 0; i < maxTrains; i++){
+        if (trainActive[i] == 1){
+            totalActiveTrains++;
+        }
+    }
+
+    if (fontLoaded) {
+        float yPos = 20;
+        
+        Text texttrain;
+        texttrain.setFont(g_font);
+        texttrain.setString("Total Trains : " + to_string(totalActiveTrains));
+        texttrain.setCharacterSize(20);
+        texttrain.setFillColor(Color::White);
+        texttrain.setPosition(1765, yPos);
+        window.draw(texttrain);
+
+        yPos +=40;
+
+        Text text1;
+        text1.setFont(g_font);
+        text1.setString("Tick: " + to_string(tick));
+        text1.setCharacterSize(20);
+        text1.setFillColor(Color::White);
+        text1.setPosition(1800, yPos);
+        window.draw(text1);
+        
+        yPos += 40;
+        
+        Text text2;
+        text2.setFont(g_font); 
+        text2.setString("Arrived: " + to_string(numArrived));
+        text2.setCharacterSize(20);
+        text2.setFillColor(Color::White);
+        text2.setPosition(1800, yPos);
+        window.draw(text2);
+        
+        yPos += 40;
+        
+        Text text3;
+        text3.setFont(g_font);
+        text3.setString("Crashed: " + to_string(numCrashed));
+        text3.setCharacterSize(20);
+        text3.setFillColor(Color::White);
+        text3.setPosition(1800, yPos);
+        window.draw(text3);
+    }
+
+
     bool hasTrackSprites = (trackTexture.getSize().x > 0);
     bool hasTileSprites = (tileTexture.getSize().x > 0);
     bool hasTrainSprites = (trainTexture.getSize().x > 0);
@@ -205,7 +269,7 @@ void printGrid(RenderWindow& window){
 // --------------------------------or--------------------------------------------
 
 bool initializeApp() {
-    unsigned int windowWidth = cols * (int)g_cellSize + 100;
+    unsigned int windowWidth = g_sidebarWidth + cols * (int)g_cellSize + 100;
     unsigned int windowHeight = rows * (int)g_cellSize + 100;
     g_window = new RenderWindow(VideoMode(windowWidth, windowHeight), "Switchback Rails");
     if (!g_window) {
@@ -216,6 +280,14 @@ bool initializeApp() {
     tileTexture.loadFromFile("Sprites/3.png");
     trainTexture.loadFromFile("Sprites/2.png");
     trainSoundBuffer.loadFromFile("Sprites/train.wav");
+    // g_font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
+    if (!g_font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
+    printf("Warning: Could not load font\n");
+    fontLoaded = false;
+} else {
+    printf("SUCCESS: Font loaded!\n");
+    fontLoaded = true;
+}
 
     printf("Loading sprites...\n");
     
