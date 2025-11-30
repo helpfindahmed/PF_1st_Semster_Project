@@ -46,6 +46,9 @@ static SoundBuffer trainSoundBuffer;
 static Sound trainSound;
 static bool soundLoaded = false;
 
+static Texture g_backgroundTexture;
+static Sprite g_backgroundSprite;
+
 void printGrid(RenderWindow& window){
     bool hasTrackSprites = (trackTexture.getSize().x > 0);
     bool hasTileSprites = (tileTexture.getSize().x > 0);
@@ -83,9 +86,9 @@ void printGrid(RenderWindow& window){
                 } 
                
                 else if (tile == '+') {
-                    sprite.setTextureRect(IntRect(362, 666, 295, 314));
-                    spriteWidth = 295;
-                    spriteHeight = 314;
+                    sprite.setTextureRect(IntRect(443, 774, 121, 105));
+                    spriteWidth = 121;
+                    spriteHeight = 105;
                     drewSprite = true;
                 }
                 
@@ -139,20 +142,26 @@ void printGrid(RenderWindow& window){
                 }
             }
             
-            if (!drewSprite) {
-                RectangleShape Rectangle(Vector2f(g_cellSize, g_cellSize));
-                Rectangle.setPosition(x, y);
-                
-                if (tile == 'S' || tile == 'D') Rectangle.setFillColor(Color(100, 0, 100));
-                else if (tile >= 'A' && tile <= 'Z') Rectangle.setFillColor(Color(255, 180, 50));
-                else if (tile == '=') Rectangle.setFillColor(Color(100, 100, 255)); 
-                else if (tile == '+' || tile == '|' || tile == '=') Rectangle.setFillColor(Color(250, 0, 250)); 
-                else Rectangle.setFillColor(Color(50, 50, 50)); 
-                
-                Rectangle.setOutlineThickness(2.0f);
-                Rectangle.setOutlineColor(Color(20, 20, 20));
-                window.draw(Rectangle);
-            }
+          if (!drewSprite) {
+    
+  
+    if (tile == 'S' || tile == 'D' || (tile >= 'A' && tile <= 'Z')) {
+        
+        RectangleShape Rectangle(Vector2f(g_cellSize, g_cellSize));
+        Rectangle.setPosition(x, y);
+        
+        
+        if (tile == 'S' || tile == 'D') Rectangle.setFillColor(Color(100, 0, 100));
+        else if (tile >= 'A' && tile <= 'Z') Rectangle.setFillColor(Color(255, 180, 50));
+        
+        
+        Rectangle.setOutlineThickness(2.0f);
+        Rectangle.setOutlineColor(Color(20, 20, 20));
+        
+        window.draw(Rectangle);
+    } 
+    
+}
         }
     }
     
@@ -234,7 +243,31 @@ bool initializeApp() {
         soundLoaded = true;
     }
     
-    return true;
+        if (!g_backgroundTexture.loadFromFile("Sprites/_.jpeg")) {
+        printf("Warning: Could not load background image!\n");
+    } else {
+       printf("SUCCESS: Background image loaded!\n");
+    g_backgroundTexture.setRepeated(true); 
+    g_backgroundSprite.setTexture(g_backgroundTexture);
+    
+    
+    unsigned int requiredWidth = cols * (int)g_cellSize + (int)g_gridOffsetX;
+    unsigned int requiredHeight = rows * (int)g_cellSize + (int)g_gridOffsetY;
+    
+    g_backgroundSprite.setTextureRect(
+        IntRect(0, 0, requiredWidth, requiredHeight) 
+    );
+    
+    
+    g_backgroundSprite.setPosition(0.0f, 0.0f);
+    
+}
+
+
+
+
+
+return true;
 }
 
 // ----------------------------------------------------------------------------
@@ -300,13 +333,17 @@ void runApp() {
         }
        
         
-        if (isSimulationComplete()) {
-            std::cout << "Simulation complete!" << std::endl;
-            g_window->close();
-        }
+       
         
         // RENDERING
         g_window->clear(Color(50, 50, 50));
+
+        if (g_backgroundTexture.getSize().x > 0) {
+            g_window->draw(g_backgroundSprite);
+        }
+
+
+
         printGrid(*g_window);
         g_window->display();
     }
@@ -322,7 +359,7 @@ void runApp() {
 // proper resource cleanup.
 // ----------------------------------------------------------------------------
 void cleanupApp() {
-     if (g_window) { //if g_window pointer has a value meaning it isnt 0 or NULLPTR
+     if (g_window) { //if g_window pointer has a value meaning it isnt 0 or NULLPTR/
         delete g_window; //delete the heap in DMA
         g_window = nullptr; //make sure it isn't a dangling pointer now
     }
