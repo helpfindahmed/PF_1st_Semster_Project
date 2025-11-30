@@ -189,7 +189,7 @@ void printGrid(RenderWindow& window){
                         break;
                     default:
 
-                    if (tile >= 'A' && tile <= 'Z'&& signalColor[getSwitchIndex(tile)]==2) {
+                    if (tile >= 'A' && tile <= 'Z'&& signalColor[getSwitchIndex(tile)]==1) {
                             sprite.setTextureRect(IntRect(50, 402, 113, 115));
                             spriteWidth = 113;
                             spriteHeight = 115;
@@ -197,7 +197,7 @@ void printGrid(RenderWindow& window){
                         }
 
                         
-                         else if (tile >= 'A' && tile <= 'Z'&& signalColor[getSwitchIndex(tile)]==1) {
+                         else if (tile >= 'A' && tile <= 'Z'&& signalColor[getSwitchIndex(tile)]==2) {
                             sprite.setTextureRect(IntRect(220, 404, 112, 109));
                             spriteWidth = 112;
                             spriteHeight = 109;
