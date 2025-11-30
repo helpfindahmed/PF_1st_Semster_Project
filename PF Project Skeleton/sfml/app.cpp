@@ -37,122 +37,96 @@ static float g_cellSize = 32.0f;
 static float g_gridOffsetX = 50.0f;
 static float g_gridOffsetY = 50.0f;
 
-
 static Texture trackTexture;      // 5.png - tracks
-static Texture tileTexture;     // 3.png - switches
-
-
+static Texture tileTexture;        // 3.png - switches
+static Texture trainTexture;       // NEW: For trains
 
 void printGrid(RenderWindow& window){
     bool hasTrackSprites = (trackTexture.getSize().x > 0);
     bool hasTileSprites = (tileTexture.getSize().x > 0);
+    bool hasTrainSprites = (trainTexture.getSize().x > 0);
     
+    // First, draw all the track tiles (your existing code)
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
             float x = g_gridOffsetX + (j * g_cellSize);
             float y = g_gridOffsetY + (i * g_cellSize);
             char tile = grid[i * cols + j];
             
+            // ... all your existing tile drawing code ...
+            
             Sprite sprite;
             bool drewSprite = false;
             float spriteWidth = 0;
             float spriteHeight = 0;
             
-            // Try to draw from track texture first (5.png)
+            // [Keep all your existing track and tile drawing code here]
             if (hasTrackSprites) {
-    sprite.setTexture(trackTexture);
-
-    // Start of the converted if-else if logic
-    
-    // Case '=' (Safety buffer / Horizontal track)
-    if (tile == '=') {
-        // Horizontal track: (44, 63) size 340x142
-        sprite.setTextureRect(IntRect(44, 63, 340, 142));
-        spriteWidth = 340;
-        spriteHeight = 142;
-        drewSprite = true;
-    } 
-    
-    // Case '|' (Vertical track)
-    // NOTE: I corrected the previous 'case true' error and replaced it with '|'.
-    else if (tile == '|') {
-        // Vertical track: (450, 62) size 138x239
-        sprite.setTextureRect(IntRect(450, 62, 138, 239));
-        spriteWidth = 138;
-        spriteHeight = 239;
-        drewSprite = true;
-    } 
-    
-    // Case '/' (Curve slash)
-    else if (tile == '/') {
-        // Curve slash: (46, 295) size 315x322
-        sprite.setTextureRect(IntRect(46, 295, 315, 322));
-        spriteWidth = 315;
-        spriteHeight = 322;
-        drewSprite = true;
-    } 
-    
-    // Case '\' (Curve backslash)
-    else if (tile == '\\') {
-        // Curve backslash (flip / horizontally): (46, 295) size 315x322
-        sprite.setTextureRect(IntRect(46, 295, 315, 322));
-        spriteWidth = 315;
-        spriteHeight = 322;
-        drewSprite = true;
-    } 
-    
-    // Case '+' (Crossing)
-    else if (tile == '+') {
-        // Crossing: (362, 666) size 295x314
-        sprite.setTextureRect(IntRect(362, 666, 295, 314));
-        spriteWidth = 295;
-        spriteHeight = 314;
-        drewSprite = true;
-    }
-    
-    // End of the converted logic
-    
-    // The drawing/scaling logic that followed your original switch statement 
-    // needs to be moved out here, after the final 'else if'.
-    
-    if (drewSprite) {
-        sprite.setPosition(x, y);
-        
-        // Calculate scale to fit cell size
-        float scaleX = g_cellSize / spriteWidth;
-        float scaleY = g_cellSize / spriteHeight;
-        
-        // Special handling for backslash - flip horizontally
-        if (tile == '\\') {
-            sprite.setScale(-scaleX, scaleY);  // Negative X flips
-            sprite.setPosition(x + g_cellSize, y);  // Adjust for flip
-        } else {
-            sprite.setScale(scaleX, scaleY);
-        }
-        
-        window.draw(sprite);
-    }
-}
-            // Try to draw from tile texture (3.png) for S, D, and switches
+                sprite.setTexture(trackTexture);
+                
+                if (tile == '=') {
+                    sprite.setTextureRect(IntRect(44, 63, 340, 142));
+                    spriteWidth = 340;
+                    spriteHeight = 142;
+                    drewSprite = true;
+                } 
+                else if (tile == '|') {
+                    sprite.setTextureRect(IntRect(450, 62, 138, 239));
+                    spriteWidth = 138;
+                    spriteHeight = 239;
+                    drewSprite = true;
+                } 
+                else if (tile == '/') {
+                    sprite.setTextureRect(IntRect(46, 295, 315, 322));
+                    spriteWidth = 315;
+                    spriteHeight = 322;
+                    drewSprite = true;
+                } 
+                else if (tile == '\\') {
+                    sprite.setTextureRect(IntRect(46, 295, 315, 322));
+                    spriteWidth = 315;
+                    spriteHeight = 322;
+                    drewSprite = true;
+                } 
+                else if (tile == '+') {
+                    sprite.setTextureRect(IntRect(362, 666, 295, 314));
+                    spriteWidth = 295;
+                    spriteHeight = 314;
+                    drewSprite = true;
+                }
+                
+                if (drewSprite) {
+                    sprite.setPosition(x, y);
+                    float scaleX = g_cellSize / spriteWidth;
+                    float scaleY = g_cellSize / spriteHeight;
+                    
+                    if (tile == '\\') {
+                        sprite.setScale(-scaleX, scaleY);
+                        sprite.setPosition(x + g_cellSize, y);
+                    } else {
+                        sprite.setScale(scaleX, scaleY);
+                    }
+                    window.draw(sprite);
+                }
+            }
+            
             if (!drewSprite && hasTileSprites) {
                 sprite.setTexture(tileTexture);
                 
                 switch(tile) {
-                    case 'S':  // Source/Spawn: (62, 99) size 171x174
+                    case 'S':
                         sprite.setTextureRect(IntRect(62, 99, 171, 174));
                         spriteWidth = 171;
                         spriteHeight = 174;
                         drewSprite = true;
                         break;
-                        
-                    case 'D':  // Destination: (567, 99) size 170x170
+                    case 'D':
                         sprite.setTextureRect(IntRect(567, 99, 170, 170));
                         spriteWidth = 170;
                         spriteHeight = 170;
                         drewSprite = true;
                         break;
-                        
-                    default:  // Switches A-Z: (66, 597) size 165x174
+                    default:
                         if (tile >= 'A' && tile <= 'Z') {
                             sprite.setTextureRect(IntRect(66, 597, 165, 174));
                             spriteWidth = 165;
@@ -164,17 +138,13 @@ void printGrid(RenderWindow& window){
                 
                 if (drewSprite) {
                     sprite.setPosition(x, y);
-                    
-                    // Calculate scale to fit cell size
                     float scaleX = g_cellSize / spriteWidth;
                     float scaleY = g_cellSize / spriteHeight;
                     sprite.setScale(scaleX, scaleY);
-                    
                     window.draw(sprite);
                 }
             }
             
-            // If sprite not drawn, use colored rectangles (fallback)
             if (!drewSprite) {
                 RectangleShape Rectangle(Vector2f(g_cellSize, g_cellSize));
                 Rectangle.setPosition(x, y);
@@ -182,14 +152,64 @@ void printGrid(RenderWindow& window){
                 if (tile == 'S' || tile == 'D') Rectangle.setFillColor(Color(100, 0, 100));
                 else if (tile >= 'A' && tile <= 'Z') Rectangle.setFillColor(Color(255, 180, 50));
                 else if (tile == '=') Rectangle.setFillColor(Color(100, 100, 255)); 
-                else if (tile == '+' || tile == '|' || tile == '=' ) Rectangle.setFillColor(Color(250, 0, 250)); 
+                else if (tile == '+' || tile == '|' || tile == '=') Rectangle.setFillColor(Color(250, 0, 250)); 
                 else Rectangle.setFillColor(Color(50, 50, 50)); 
                 
                 Rectangle.setOutlineThickness(2.0f);
                 Rectangle.setOutlineColor(Color(20, 20, 20));
-                
                 window.draw(Rectangle);
             }
+        }
+    }
+    
+    // NOW draw trains ON TOP of the tracks
+    for (int i = 0; i < maxTrains; i++) {
+        if (trainActive[i] == 1) {
+            int trainCol = trainX[i];  // X = column
+            int trainRow = trainY[i];  // Y = row
+            
+            float x = g_gridOffsetX + (trainCol * g_cellSize);
+            float y = g_gridOffsetY + (trainRow * g_cellSize);
+            
+            if (hasTrainSprites) {
+                // Use train sprite from 1.png
+                Sprite trainSprite;
+                trainSprite.setTexture(trainTexture);
+                
+                // Train sprite coordinates (adjust these based on your sprite sheet)
+                trainSprite.setTextureRect(IntRect(0, 0, 64, 64));  // Adjust based on actual sprite
+                
+                // Scale to fit cell
+                float scale = g_cellSize / 64.0f;
+                trainSprite.setScale(scale, scale);
+                trainSprite.setPosition(x, y);
+                
+                // Color the train based on trainColor
+                Color trainColors[] = {
+                    Color::Red, Color::Blue, Color::Green, Color::Yellow, Color::Magenta,
+                    Color::Cyan, Color(255, 128, 0), Color(128, 0, 255), Color(255, 0, 128), Color(0, 255, 128)
+                };
+                trainSprite.setColor(trainColors[trainColor[i] % 10]);
+                
+                window.draw(trainSprite);
+            } else {
+                // Fallback: colored circles
+                CircleShape trainCircle(g_cellSize * 0.3f);
+                trainCircle.setPosition(x + g_cellSize * 0.2f, y + g_cellSize * 0.2f);
+                
+                Color trainColors[] = {
+                    Color::Red, Color::Blue, Color::Green, Color::Yellow, Color::Magenta,
+                    Color::Cyan, Color(255, 128, 0), Color(128, 0, 255), Color(255, 0, 128), Color(0, 255, 128)
+                };
+                trainCircle.setFillColor(trainColors[trainColor[i] % 10]);
+                trainCircle.setOutlineThickness(2.0f);
+                trainCircle.setOutlineColor(Color::White);
+                
+                window.draw(trainCircle);
+            }
+            
+            // Optional: Draw train ID number
+            // (You'd need to load a font for this)
         }
     }
 }
@@ -206,34 +226,39 @@ void printGrid(RenderWindow& window){
 // This should be called once at the start of the application before entering
 // the main loop.
 // --------------------------------or--------------------------------------------
+
 bool initializeApp() {
-    unsigned int windowWidth =  cols * (int)g_cellSize + 100;
+    unsigned int windowWidth = cols * (int)g_cellSize + 100;
     unsigned int windowHeight = rows * (int)g_cellSize + 100;
     g_window = new RenderWindow(VideoMode(windowWidth, windowHeight), "Switchback Rails");
     if (!g_window) {
         return false;
     }
-    g_window->setFramerateLimit(10);  // Slower so you can see simulation
+    g_window->setFramerateLimit(10);
     
-    // Load track sprites (5.png)
     printf("Loading sprites...\n");
+    
     if (!trackTexture.loadFromFile("Sprites/5.png")) {
         printf("Warning: Could not load 5.png - using colored rectangles\n");
     } else {
-        printf("SUCCESS: 5.png loaded! Image size: %dx%d\n", 
-               trackTexture.getSize().x, trackTexture.getSize().y);
+        printf("SUCCESS: 5.png loaded!\n");
     }
     
-    // Load switch sprites (3.png) - we'll add this later
     if (!tileTexture.loadFromFile("Sprites/3.png")) {
         printf("Warning: Could not load 3.png\n");
     } else {
         printf("SUCCESS: 3.png loaded!\n");
     }
     
+    // Load train sprites
+    if (!trainTexture.loadFromFile("Sprites/1.png")) {
+        printf("Warning: Could not load 1.png - using colored circles\n");
+    } else {
+        printf("SUCCESS: 1.png loaded!\n");
+    }
+    
     return true;
 }
-
 
 // ----------------------------------------------------------------------------
 // MAIN RUN LOOP
@@ -248,7 +273,7 @@ bool initializeApp() {
 // ----------------------------------------------------------------------------
 void runApp() {
     Clock clock;  // Add this - SFML clock for timing
-    float tickInterval = 0.1f;  // 0.5 seconds per tick (2 ticks per second)
+    float tickInterval = 0.5f;  // 0.5 seconds per tick (2 ticks per second)
     float timeSinceLastTick = 0.0f;
     
     while (g_window->isOpen()) {

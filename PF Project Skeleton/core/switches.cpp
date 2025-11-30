@@ -21,7 +21,7 @@ void updateSwitchCounters() {
         if (trainActive[i] == 0)
             continue;
         if (isSwitchTile(trainprevX[i], trainprevY[i])){
-            int conversion = trainX[i] * cols + trainY[i];
+            int conversion = trainY[i] * cols + trainX[i];
             int switchnum = getSwitchIndex(grid[conversion]);
             if (switchnum == -1)
                 continue;
@@ -120,7 +120,7 @@ void updateSignalLights() {
 // Manually toggle a switch state.
 // ----------------------------------------------------------------------------
 void toggleSwitchState(int x , int y) {
-    int switchitr = getSwitchIndex(grid[(x * cols) + y]); 
+    int switchitr = getSwitchIndex(grid[(y * cols) + x]); 
     if (switchitr != -1 && switchitr < maxSwitches) {
         // Toggle the state
         if (switchState[switchitr] == 1){

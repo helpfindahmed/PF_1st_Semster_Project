@@ -136,6 +136,19 @@ bool determineNextPosition(int trainIndex) {
     int currentY = trainY[trainIndex];
     int currentDir = trainDirection[trainIndex];
     
+int newDir = currentDir;
+    // FIRST: Check if current tile is a crossing and update direction
+    char currentTile = grid[currentY * cols + currentX];
+    if (currentTile == '+') {
+        currentDir = getSmartDirectionAtCrossing(trainIndex);
+        // Debug
+        if (tick < 30) {
+            std::cout << "Train " << trainIndex << " at crossing (" << currentX << "," << currentY 
+                     << ") chose direction " << currentDir << std::endl;
+        }
+    }
+
+
     // Debug for first train in first few ticks
     if (trainIndex == 0 && tick < 5) {
         std::cout << "  Train 0: current=(" << currentX << "," << currentY 
@@ -165,13 +178,12 @@ bool determineNextPosition(int trainIndex) {
         return false;
     }
     // Get the tile at next position
-    char nextTile = grid[nextX * cols + nextY];
-    int newDir = currentDir;
-    if (nextTile == '+') {
-        newDir = getSmartDirectionAtCrossing(trainIndex);
-    } 
+    char nextTile = grid[nextY * cols + nextX];
+
     
-    else if (nextTile == '/' || nextTile == '\\') {
+   
+    
+    if (nextTile == '/' || nextTile == '\\') {
         newDir = getNextDirection(nextX, nextY, currentDir);
     }
     
@@ -205,7 +217,7 @@ bool determineNextPosition(int trainIndex) {
 int getNextDirection(int x , int y , int currentDir) {
     //   if (!isInBounds(x, y)) return currentDir;
     
-    char tile = grid[x * cols + y];
+    char tile = grid[y * cols + x];
     
     // Straight tracks maintain direction
     if (tile == '=' && (currentDir == Dirwest || currentDir == Direast)) {
@@ -247,7 +259,7 @@ int getNextDirection(int x , int y , int currentDir) {
 // ----------------------------------------------------------------------------
 int getSmartDirectionAtCrossing(int trainIndex) {
 
-     int currentX = trainX[trainIndex];
+    int currentX = trainX[trainIndex];
     int currentY = trainY[trainIndex];
     int targetX = destX[trainIndex];
     int targetY = destY[trainIndex];
@@ -265,11 +277,11 @@ int getSmartDirectionAtCrossing(int trainIndex) {
     
     // Prefer horizontal movement if horizontal distance is greater
     if (distX > distY) {
-        if (differx > 0) return Dirsouth;  // Move down (increasing x)
-        else return Dirnorth;           // Move up (decreasing x)
+        if (differx > 0) return Direast;  // Move down (increasing x)
+        else return Dirwest;           // Move up (decreasing x)
     } else {
-        if (differy > 0) return Direast; // Move right (increasing y)
-        else return Dirwest;         // Move left (decreasing y)
+        if (differy > 0) return Dirsouth; // Move right (increasing y)
+        else return Dirnorth;         // Move left (decreasing y)
     }
 }
 
