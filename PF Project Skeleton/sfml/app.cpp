@@ -225,26 +225,26 @@ void printGrid(RenderWindow& window){
             }
 
             
-          if (!drewSprite) {
+        if (!drewSprite) {
     
-  
-    if (tile == 'S' || tile == 'D' || (tile >= 'A' && tile <= 'Z')) {
         
-        RectangleShape Rectangle(Vector2f(g_cellSize, g_cellSize));
-        Rectangle.setPosition(x, y);
-        
-        
-        if (tile == 'S' || tile == 'D') Rectangle.setFillColor(Color(100, 0, 100));
-        else if (tile >= 'A' && tile <= 'Z') Rectangle.setFillColor(Color(255, 180, 50));
-        
-        
-        Rectangle.setOutlineThickness(2.0f);
-        Rectangle.setOutlineColor(Color(20, 20, 20));
-        
-        window.draw(Rectangle);
-    } 
+            if (tile == 'S' || tile == 'D' || (tile >= 'A' && tile <= 'Z')) {
+                
+                RectangleShape Rectangle(Vector2f(g_cellSize, g_cellSize));
+                Rectangle.setPosition(x, y);
+                
+                
+                if (tile == 'S' || tile == 'D') Rectangle.setFillColor(Color(100, 0, 100));
+                else if (tile >= 'A' && tile <= 'Z') Rectangle.setFillColor(Color(255, 180, 50));
+                
+                
+                Rectangle.setOutlineThickness(2.0f);
+                Rectangle.setOutlineColor(Color(20, 20, 20));
+                
+                window.draw(Rectangle);
+            } 
     
-}
+        }
 
         }
     }
@@ -360,7 +360,6 @@ void runApp() {
     float timeSinceLastTick = 0.0f;
 
     while (g_window->isOpen()) {
-        // Calculate delta time
         float deltaTime = clock.restart().asSeconds();
         timeSinceLastTick += deltaTime;
 
@@ -369,6 +368,7 @@ void runApp() {
             if (event.type == Event::Closed) {
                 g_window->close();
             }
+            
             if (event.type == Event::KeyPressed) {
                 if (event.key.code == Keyboard::Escape) {
                     g_window->close();
